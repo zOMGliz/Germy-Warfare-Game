@@ -1,0 +1,3438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Germy Warfare</title>
+<style>
+  body { margin:0; background:#111; display:flex; justify-content:center; align-items:center; height:100vh; font-family:sans-serif; color:#fff; }
+  canvas { border:2px solid #333; background:#0a0a0a; }
+  #ui { position:absolute; top:10px; left:10px; font-size:14px; }
+  #gameover { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:32px; display:none; text-align:center; }
+</style>
+</head>
+<body>
+<canvas id="game" width="1200" height="800"></canvas>
+
+<!-- Vertical Dashboard (left side, closer to playfield) -->
+<div id="dashboard" style="position:absolute;left:108px;top:50%;transform:translateY(-50%);width:160px;height:600px;background-image:url('dashboard_panel.svg');background-size:contain;background-repeat:no-repeat;">
+  <!-- Partition 1: Bill portrait (spinning glycoproteins!) -->
+  <img id="dashboardbill" src="bill.svg" style="position:absolute;top:36px;left:50%;transform:translateX(-50%);width:100px;height:100px;">
+  <!-- Partition 2: Score -->
+  <div style="position:absolute;top:179px;left:0;width:100%;text-align:center;color:#88f;font-size:14px;">SCORE</div>
+  <div id="dbscore" style="position:absolute;top:201px;left:0;width:100%;text-align:center;color:#fff;font-size:28px;font-weight:bold;">0</div>
+  <!-- Partition 3: Lives -->
+  <div style="position:absolute;top:293px;left:0;width:100%;text-align:center;color:#f88;font-size:14px;">LIVES</div>
+  <div id="dblives" style="position:absolute;top:315px;left:0;width:100%;text-align:center;color:#fff;font-size:22px;">❤️❤️❤️</div>
+  <!-- Partition 4: DNA -->
+  <div style="position:absolute;top:407px;left:0;width:100%;text-align:center;color:#8cf;font-size:14px;">DNA</div>
+  <div id="dbdna" style="position:absolute;top:429px;left:0;width:100%;text-align:center;color:#fff;font-size:22px;">0/10</div>
+  <!-- Partition 5: Level (bottom) -->
+  <div style="position:absolute;top:507px;left:0;width:100%;text-align:center;color:#fc8;font-size:14px;">LEVEL</div>
+  <div id="dblevel" style="position:absolute;top:529px;left:0;width:100%;text-align:center;color:#fff;font-size:36px;font-weight:bold;">1</div>
+</div>
+
+<div id="ui" style="display:none;position:absolute;top:10px;left:10px;font-size:14px;">Score: <span id="score">0</span> | DNA: <span id="dnaui">0</span>/10 | Stuck: <span id="stuck">0</span>/5</div>
+<div id="timerui" style="position:absolute;top:100px;left:1630px;font-size:48px;font-weight:bold;color:#ffaa00;">60</div>
+<div id="totalscoreui" style="position:absolute;top:160px;left:1630px;font-size:18px;color:#88ff88;">TOTAL SCORE: <span id="totalscore">0</span></div>
+<div id="livesui" style="position:absolute;top:820px;left:10px;display:flex;gap:8px;"></div>
+<div id="gameover" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#330000;padding:40px 60px;border-radius:16px;text-align:center;display:none;">
+  <h2 style="font-size:36px;margin-bottom:10px;color:#ff4444;">GAME OVER</h2>
+  <div id="gameoverbill" style="margin:20px auto;width:120px;height:120px;"></div>
+  <div id="gameovermsg" style="font-size:18px;margin:15px 0;color:#ffaaaa;"></div>
+  <div style="display:flex;gap:20px;justify-content:center;margin-top:25px;">
+    <button id="startoverbtn" style="padding:14px 28px;font-size:18px;cursor:pointer;background:#880000;border:none;color:#fff;border-radius:8px;">Start Over</button>
+    <button id="mainmenubtn" style="padding:14px 28px;font-size:18px;cursor:pointer;background:#555;border:none;color:#fff;border-radius:8px;">Main Menu</button>
+  </div>
+</div>
+<div id="youdied" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#222;padding:40px 60px;border-radius:16px;text-align:center;display:none;">
+  <h2 style="font-size:32px;margin-bottom:10px;color:#ffaa00;">You Died</h2>
+  <div id="youdiedbill" style="margin:15px auto;width:100px;height:100px;"></div>
+  <div id="remaininglives" style="display:flex;align-items:center;justify-content:center;gap:10px;margin:15px 0;font-size:16px;"></div>
+  <div style="display:flex;gap:20px;justify-content:center;margin-top:20px;">
+    <button id="restartlevelbtn" style="padding:14px 28px;font-size:18px;cursor:pointer;background:#448800;border:none;color:#fff;border-radius:8px;">Restart Level</button>
+    <button id="restartgamebtn" style="padding:14px 28px;font-size:18px;cursor:pointer;background:#880000;border:none;color:#fff;border-radius:8px;">Menu</button>
+  </div>
+</div>
+<div id="levelsplash" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#222;padding:40px 60px;border-radius:12px;text-align:center;display:none;">
+  <h2 id="leveltitle">Level 1 Complete!</h2>
+  <div id="billface" style="margin:20px auto;width:100px;height:100px;"></div>
+  <div id="stats" style="text-align:left;margin:20px 0;font-size:15px;line-height:1.8;"></div>
+  <button id="nextlevel" style="padding:12px 24px;font-size:18px;cursor:pointer;">Next Level</button>
+</div>
+<div id="gamestartsplash" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#1a1a1a;padding:50px 70px;border-radius:16px;text-align:center;display:none;max-width:720px;">
+  <img src="bill_sassy.svg" style="width:120px;height:120px;display:block;margin:0 auto 20px;">
+  <h2 style="font-size:32px;color:#ffaa00;margin-bottom:20px;">The Story Begins</h2>
+  <div id="narratorbox" style="background:#111;border:2px solid #553366;border-radius:10px;padding:20px 28px;margin-bottom:25px;text-align:left;font-size:16px;line-height:1.7;color:#ddd;">
+    <p style="margin:0 0 12px 0;"><strong>Bill is a virus.</strong> A very ambitious one.</p>
+    <p style="margin:0 0 12px 0;">He dreams of taking over the entire body — one fibroblast at a time. Fibroblasts are the soft, defenseless cells that hold everything together. Bill infects them. They become his. And when he has enough? He multiplies. Spreads. Conquers.</p>
+    <p style="margin:0;">But the immune system doesn't just sit there and watch. They fight back. Bill's journey starts now. The fibroblasts await. The immune system is watching.</p>
+  </div>
+  <h3 style="font-size:22px;color:#ffaa00;margin-bottom:12px;">How to Play</h3>
+  <div style="background:#111;border-radius:8px;padding:16px 22px;margin-bottom:25px;text-align:left;font-size:15px;color:#ccc;">
+    <div style="margin-bottom:8px;"><strong style="color:#fff;">Mouse</strong> — Move Bill (you ARE the cursor)</div>
+    <div style="margin-bottom:8px;"><strong style="color:#fff;">Space</strong> — Shoot a glycoprotein (infects fibroblasts / damages enemies)</div>
+    <div><strong style="color:#fff;">Shift</strong> or <strong style="color:#fff;">Click</strong> — LYSIS: burst all infected fibroblasts at once (score + ammo!)</div>
+  </div>
+  <button id="gamestartbegin" style="padding:18px 40px;font-size:22px;font-weight:bold;cursor:pointer;background:#44ff88;color:#111;border:none;border-radius:12px;box-shadow:0 4px 12px rgba(68,255,136,0.4);">Begin Adventure</button>
+</div>
+<div id="levelintrosplash" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#222;padding:40px 60px;border-radius:12px;text-align:center;display:none;max-width:600px;">
+  <h2 id="levelintrotitle" style="font-size:28px;color:#ffaa00;margin-bottom:10px;">Level 1</h2>
+  <div id="levelintrosubtitle" style="font-size:18px;color:#aaa;margin-bottom:20px;">The First Incursion</div>
+  <div id="levelintrobill" style="margin:10px auto 15px;"></div>
+  <div id="levelintroblurb" style="font-size:16px;color:#ddd;margin-bottom:20px;font-style:italic;"></div>
+  <div id="levelintroenemy" style="background:#1a1a1a;border-radius:10px;padding:18px;margin-bottom:18px;"></div>
+  <div id="levelintrokeytip" style="background:#331100;border-left:4px solid #ff8800;padding:12px 16px;margin-bottom:25px;font-size:15px;color:#ffcc99;text-align:left;"></div>
+  <button id="levelintrobegins" style="padding:16px 38px;font-size:20px;font-weight:bold;cursor:pointer;background:#44ff88;color:#111;border:none;border-radius:12px;box-shadow:0 4px 12px rgba(68,255,136,0.4);">BEGIN</button>
+</div>
+<div id="startsplash" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#222;padding:50px 80px;border-radius:16px;text-align:center;">
+  <img src="bill_sassy.svg" style="width:80px;height:80px;display:block;margin:0 auto 10px;">
+  <h1 style="font-size:36px;margin-bottom:20px;">Germy Warfare</h1>
+  <p style="font-size:18px;margin-bottom:30px;">Survive the immune system. Infect. Multiply. Win.</p>
+  <div style="display:flex;gap:20px;justify-content:center;">
+    <button id="startbtn" style="padding:18px 36px;font-size:20px;font-weight:bold;cursor:pointer;background:#44ff88;color:#111;border:none;border-radius:12px;box-shadow:0 4px 12px rgba(68,255,136,0.4);">Start Game</button>
+    <button id="instrbtn" style="padding:18px 36px;font-size:20px;font-weight:bold;cursor:pointer;background:#44ccff;color:#111;border:none;border-radius:12px;box-shadow:0 4px 12px rgba(68,204,255,0.4);">Instructions</button>
+    <button id="leaderboardbtn" style="padding:18px 36px;font-size:20px;font-weight:bold;cursor:pointer;background:#ffcc44;color:#111;border:none;border-radius:12px;box-shadow:0 4px 12px rgba(255,204,68,0.4);">Leaderboard</button>
+    <button id="charsbtn" style="padding:18px 36px;font-size:20px;font-weight:bold;cursor:pointer;background:#cc66ff;color:#fff;border:none;border-radius:12px;box-shadow:0 4px 12px rgba(204,102,255,0.4);">Characters</button>
+  </div>
+  <div style="margin-top:15px;"><a id="devbtn" href="#" style="color:#888;font-size:12px;text-decoration:underline;">[Dev]</a></div>
+</div>
+<div id="devlevels" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#1a1a1a;padding:40px 60px;border-radius:12px;text-align:center;display:none;">
+  <h2 style="margin-bottom:20px;">🛠️ Dev: Level Select</h2>
+  <div id="levelbuttons" style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;"></div>
+  <div style="margin-top:20px;display:flex;gap:10px;justify-content:center;">
+    <button id="devartbtn" style="padding:8px 16px;font-size:14px;cursor:pointer;background:#666;">🎨 Art</button>
+    <button id="devcutscenebtn" style="padding:8px 16px;font-size:14px;cursor:pointer;background:#9966cc;">🎬 Cutscene</button>
+    <button id="devback" style="padding:8px 16px;font-size:14px;cursor:pointer;background:#444;">Back</button>
+  </div>
+</div>
+<div id="leaderboardsplash" style="position:absolute;top:0;left:0;width:100%;height:100%;background:#0a0a0a;display:none;overflow:hidden;">
+  <canvas id="leaderboardcanvas" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);"></canvas>
+  <div style="position:relative;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;">
+    <h2 style="font-size:36px;color:#ffaa00;margin-bottom:10px;">🏆 High Scores</h2>
+    <div id="scorebox" style="background:#222;border:4px solid #ffaa00;border-radius:12px;padding:20px 40px;min-width:320px;text-align:left;color:#fff;font-size:18px;">
+      <ol id="scorelist" style="margin:0;padding-left:20px;"></ol>
+    </div>
+    <div style="margin-top:25px;">
+      <button id="leaderbackbtn" style="padding:14px 28px;font-size:18px;cursor:pointer;background:#555;border:none;color:#fff;border-radius:8px;">Back</button>
+    </div>
+  </div>
+</div>
+<div id="artsplash" style="position:absolute;top:0;left:0;width:100%;height:100%;background:#111;display:none;overflow:auto;padding:40px;box-sizing:border-box;">
+  <h2 style="color:#ffaa00;text-align:center;margin-bottom:20px;">🎨 Game Art</h2>
+  <div id="artgrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:20px;justify-items:center;max-width:1200px;margin:0 auto;"></div>
+  <div style="text-align:center;margin-top:30px;">
+    <button id="artbackbtn" style="padding:12px 24px;font-size:16px;cursor:pointer;background:#444;border:none;color:#fff;border-radius:8px;">Back</button>
+  </div>
+</div>
+<div id="charsplash" style="position:absolute;top:0;left:0;width:100%;height:100%;background:#0a0a0a;display:none;overflow:auto;padding:40px;box-sizing:border-box;">
+  <div id="chargrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:30px;max-width:1000px;margin:0 auto;"></div>
+  <div style="text-align:center;margin-top:40px;">
+    <button id="charbackbtn" style="padding:14px 28px;font-size:18px;cursor:pointer;background:#444;border:none;color:#fff;border-radius:8px;">Back</button>
+  </div>
+</div>
+<div id="cutscenesplash" style="position:absolute;top:0;left:0;width:100%;height:100%;background:#0a0a0a;display:none;overflow:hidden;">
+  <canvas id="cutscenecanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;"></canvas>
+  <div style="position:absolute;top:10px;right:10px;">
+    <button id="cutscenebackbtn" style="padding:12px 24px;font-size:16px;cursor:pointer;background:#444;border:none;color:#fff;border-radius:8px;">Back</button>
+  </div>
+  <div id="cutscenelabel" style="position:absolute;bottom:40px;left:50%;transform:translateX(-50%);color:#ffcc00;font-size:52px;font-weight:bold;text-align:center;pointer-events:none;"></div>
+</div>
+
+<script>
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+const uiScore = document.getElementById('score');
+const uiDna = document.getElementById('dnaui');
+const uiStuck = document.getElementById('stuck');
+const timerEl = document.getElementById('timerui');
+const totalScoreEl = document.getElementById('totalscore');
+const livesEl = document.getElementById('livesui');
+const gameOverEl = document.getElementById('gameover');
+const gameOverBill = document.getElementById('gameoverbill');
+const gameOverMsg = document.getElementById('gameovermsg');
+const startOverBtn = document.getElementById('startoverbtn');
+const mainMenuBtn = document.getElementById('mainmenubtn');
+const youDiedEl = document.getElementById('youdied');
+const youDiedBill = document.getElementById('youdiedbill');
+const remainingLivesEl = document.getElementById('remaininglives');
+const restartLevelBtn = document.getElementById('restartlevelbtn');
+const restartGameBtn = document.getElementById('restartgamebtn');
+const levelSplash = document.getElementById('levelsplash');
+const billFaceEl = document.getElementById('billface');
+const statsEl = document.getElementById('stats');
+const nextLevelBtn = document.getElementById('nextlevel');
+const startSplash = document.getElementById('startsplash');
+const startBtn = document.getElementById('startbtn');
+const instrBtn = document.getElementById('instrbtn');
+const devLevels = document.getElementById('devlevels');
+const levelButtons = document.getElementById('levelbuttons');
+const devBack = document.getElementById('devback');
+const leaderboardSplash = document.getElementById('leaderboardsplash');
+const leaderboardCanvas = document.getElementById('leaderboardcanvas');
+const leaderboardCtx = leaderboardCanvas.getContext('2d');
+const scoreList = document.getElementById('scorelist');
+const leaderBackBtn = document.getElementById('leaderbackbtn');
+const leaderboardBtn = document.getElementById('leaderboardbtn');
+const artSplash = document.getElementById('artsplash');
+const artGrid = document.getElementById('artgrid');
+const artBackBtn = document.getElementById('artbackbtn');
+const devArtBtn = document.getElementById('devartbtn');
+const devCutsceneBtn = document.getElementById('devcutscenebtn');
+const charSplash = document.getElementById('charsplash');
+const charGrid = document.getElementById('chargrid');
+const charBackBtn = document.getElementById('charbackbtn');
+const charsBtn = document.getElementById('charsbtn');
+const cutsceneSplash = document.getElementById('cutscenesplash');
+const cutsceneCanvas = document.getElementById('cutscenecanvas');
+const cutsceneCtx = cutsceneCanvas.getContext('2d');
+const cutsceneBackBtn = document.getElementById('cutscenebackbtn');
+const cutsceneLabel = document.getElementById('cutscenelabel');
+const gameStartSplash = document.getElementById('gamestartsplash');
+const gameStartBeginBtn = document.getElementById('gamestartbegin');
+const levelIntroSplash = document.getElementById('levelintrosplash');
+const levelIntroTitle = document.getElementById('levelintrotitle');
+const levelIntroSubtitle = document.getElementById('levelintrosubtitle');
+const levelIntroBill = document.getElementById('levelintrobill');
+const levelIntroBlurb = document.getElementById('levelintroblurb');
+const levelIntroEnemy = document.getElementById('levelintroenemy');
+const levelIntroKeyTip = document.getElementById('levelintrokeytip');
+const levelIntroBeginBtn = document.getElementById('levelintrobegins');
+
+const W = canvas.width;
+const H = canvas.height;
+
+let mouse = { x: W/2, y: H/2 };
+let bill = { x: W/2, y: H/2, facing: 0, smiling: true, frozenTimer: 0 };
+let score = 0;
+let totalScore = 0; // running total across all levels
+let gameOver = false;
+let gameLoopRunning = false; // prevents duplicate loops
+let time = 0; // frames elapsed
+let graceTimer = 0; // frames of invincibility at level start (~2s)
+let deathCause = 'macrophage'; // 'macrophage' | 'bcell' | 'eosinophil' | 'helperT' | 'neutrophil' | 'dendritic'
+
+// Level system
+const LEVEL_DURATION_MS = 60000; // 60 seconds
+let level = 1;
+let levelStartTime = 0;
+let lives = 3;
+let levelComplete = false;
+let naturalSpawns = 0; // cap at 5
+let goingViralTimer = 0; // frames remaining for Going Viral text
+let eosinRespawnTimer = 0; // frames until eosinophil respawns
+let bcellRespawnTimer = 0; // frames until B cell respawns
+let neutrophilRespawnTimer = 0; // frames until neutrophil respawns
+let helperTRespawnTimer = 0; // frames until helper T respawns
+let cytotoxicTRespawnTimer = 0; // frames until cytotoxic T respawns
+let basophilRespawnTimer = 0; // frames until basophil respawns
+
+// Stats tracking
+let shotsFired = 0;
+let shotsHit = 0;
+let fibroblastsInfected = 0;
+let macrophagesDestroyed = 0;
+
+let fibroblasts = [];
+let macrophages = [];
+let glycoproteins = [];
+let darts = []; // Going Viral darts - each kills one closest fibroblast
+let particles = [];
+let bcells = [];
+let eosinophils = [];
+let neutrophils = [];
+let helperTCells = [];
+let cytotoxicTCells = [];
+let basophils = [];
+let dendriticCells = []; // level 7: immortal spidery cells that place cytokines
+let naturalKillerNinjas = []; // level 8: fast ninja assassins with blink dodge
+let progenitor = null; // level 9: Myeloid Progenitor (queen)
+let monocytes = []; // level 9: orbiting monocytes (minions)
+let progenitorSpawnTimer = 0; // level 9: spawn timer for monocytes
+let nkRespawnTimer = 0;
+let histamineClouds = [];
+let antibodies = []; // flying antibodies from B Cells
+let stuckAntibodies = 0; // antibodies stuck to Bill (5 = game over)
+let dna = []; // DNA collectables (spawn on fibroblast lysis)
+let dnaCount = 0; // collected DNA (10 = +1 life)
+
+// Level 10: Hematopoietic Stem Cell boss
+let hscBoss = null; // { x, y, health, maxHealth, phase, sway, spawnTimer }
+let crowns = []; // power-up crowns dropped by boss
+let crownTimer = 0; // >0 = 2x damage active (frames)
+
+const FIBRO_COUNT = 40;
+const MACRO_START = 1;
+const LYSIS_RADIUS = 60;
+
+// Level intro splash content (no emojis — use SVG refs for visuals)
+const levelIntroData = [
+  null, // index 0 unused
+  { // Level 1
+    title: 'Level 1',
+    subtitle: 'The First Incursion',
+    billImg: 'bill_sassy.svg',
+    blurb: "Finally. Fresh fibroblasts. The immune system sent someone? Let's see how tough they are.",
+    enemyHTML: '<img src="macrophage.svg" style="width:80px;height:80px;display:block;margin:0 auto 10px;"><strong>Macrophages</strong><br>Big red brutes. They wander aimlessly — until they spot you. Touch them and you lose a life.',
+    keyTip: "Don't shoot the macrophages. They'll split into four smaller ones. Just dodge. Survive. Infect. Repeat."
+  },
+  { // Level 2
+    title: 'Level 2',
+    subtitle: 'Sticky Situation',
+    billImg: 'bill_frown.svg',
+    blurb: "Okay, okay. That was easy. But now they're sending snipers? Rude.",
+    enemyHTML: '<img src="bcell.svg" style="width:80px;height:80px;display:block;margin:0 auto 10px;"><strong>B Cells</strong><br>Patient snipers. They hang back and fire sticky antibodies at you. Five stuck and it\'s game over. Touching one directly also gets you stuck.',
+    keyTip: 'Dodge the blobs. Keep moving. They respawn if you kill them.'
+  },
+  { // Level 3
+    title: 'Level 3',
+    subtitle: 'The Reluctant Healer',
+    billImg: 'bill_sad.svg',
+    blurb: "Wait, they're *curing* my hard work? That's personal.",
+    enemyHTML: '<img src="eosinophil.svg" style="width:80px;height:80px;display:block;margin:0 auto 10px;"><strong>Eosinophils</strong><br>They chase down infected fibroblasts to cure them. If you get in the way… well, they eat viruses too.',
+    keyTip: "They're slow. Use that. And protect your infected cells — they're your food."
+  },
+  { // Level 4
+    title: 'Level 4',
+    subtitle: 'The Conversion',
+    billImg: 'bill_sad.svg',
+    blurb: "Where'd all the fibroblasts go? Something's converting them.",
+    enemyHTML: '<img src="neutrophil.svg" style="width:80px;height:80px;display:block;margin:0 auto 10px;"><strong>Neutrophils</strong><br>Slow, bored workers. They drift lazily until they find a fibroblast — then turn it into another neutrophil. This level is *only* neutrophils.',
+    keyTip: 'No distractions. Protect your food supply. Stay sharp.'
+  },
+  { // Level 5
+    title: 'Level 5',
+    subtitle: 'The Smug Ones',
+    billImg: 'bill_sassy.svg',
+    blurb: "These guys think they're better than me. Let's prove them wrong.",
+    enemyHTML: '<div style="display:flex;justify-content:center;gap:20px;"><img src="helper_t_cell.svg" style="width:70px;height:70px;"><img src="cytotoxic_t_cell.svg" style="width:70px;height:70px;"></div><strong>Helper T Cells</strong> & <strong>Cytotoxic T Cells</strong><br>Helper T chases smugly. Cytotoxic T zig-zags fast and never stops.',
+    keyTip: 'Two types. One smug, one deadly. Stay moving.'
+  },
+  { // Level 6
+    title: 'Level 6',
+    subtitle: 'The Stink Bomb',
+    billImg: 'bill_frown.svg',
+    blurb: "Ugh. What is that smell? Something's brewing trouble.",
+    enemyHTML: '<div style="display:flex;justify-content:center;gap:20px;"><img src="basophil.svg" style="width:70px;height:70px;"><img src="cytotoxic_t_cell.svg" style="width:70px;height:70px;"></div><strong>Basophils</strong> & <strong>Cytotoxic T Cells</strong><br>Basophils belch histamine clouds. Cytotoxic T still fast and annoying.',
+    keyTip: 'Give basophils space. The cloud freezes everything — including you.'
+  },
+  { // Level 7
+    title: 'Level 7',
+    subtitle: 'The Minefield',
+    billImg: 'bill_sad.svg',
+    blurb: "They're not even trying to chase me. They're just… planting things?",
+    enemyHTML: '<img src="dendritic_cell.svg" style="width:80px;height:80px;display:block;margin:0 auto 10px;"><strong>Dendritic Cells</strong><br>Massive. Immovable. They drift slowly and drop cytokine mines near you. Touch one and — poof. They can\'t be killed. Just get angry when shot.',
+    keyTip: "Don't step on the mines. That's it. They're immortal and very proud of it."
+  },
+  { // Level 8
+    title: 'Level 8',
+    subtitle: 'The Blink',
+    billImg: 'bill_scared.svg',
+    blurb: "Where'd he go?! He was RIGHT THERE.",
+    enemyHTML: '<img src="nk2.svg" style="width:80px;height:80px;display:block;margin:0 auto 10px;"><strong>Natural Killer Ninjas</strong><br>Fast assassins. Chase you. Blink away from your shots. Teleport dramatically every 10 seconds just to mess with your head.',
+    keyTip: 'Aim carefully. They\'ll vanish the moment you fire. Stay calm. Or don\'t.'
+  },
+  { // Level 9
+    title: 'Level 9',
+    subtitle: 'The Queen',
+    billImg: 'bill_sassy.svg',
+    blurb: "Oh great. Royalty. Let's see how she likes a little infection.",
+    enemyHTML: '<div style="display:flex;justify-content:center;gap:10px;"><img src="myeloid_progenitor.svg" style="width:70px;height:70px;"><img src="monocyte.svg" style="width:60px;height:60px;"></div><strong>Myeloid Progenitor + Monocytes</strong><br>The queen drifts slowly toward you. Her six monocytes orbit around her like a living shield. Touch either and you\'re done. When she dies, they scatter and attack.',
+    keyTip: 'The queen is protected by her guards. Kill the monocytes to strip her armor, then finish her off.'
+  },
+  { // Level 10
+    title: 'Level 10',
+    subtitle: 'The Source',
+    billImg: 'bill_exalted.svg',
+    blurb: "This is it. The big one. The source of everything. Let's finish this, Bill.",
+    enemyHTML: '<img src="hsc_mystery.svg" style="width:80px;height:80px;display:block;margin:0 auto 10px;"><strong>Hematopoietic Stem Cell</strong><br>The ancient throne. It spawns waves of everything you\'ve fought. Phases get worse. Every hit makes it recoil. This is the final boss.',
+    keyTip: 'Stay sharp. Collect the crowns it drops — you\'ll need the power boost. You\'ve got this.'
+  }
+];
+
+// Load sprites
+const billImg = new Image(); billImg.src = 'bill.svg';
+const billSadImg = new Image(); billSadImg.src = 'bill_sad.svg';
+const billCrownImg = new Image(); billCrownImg.src = 'bill_buff_crown.svg';
+const fibroImg = new Image(); fibroImg.src = 'fibroblast.svg';
+const fibroInfImg = new Image(); fibroInfImg.src = 'fibroblast_infected.svg';
+const macroImg = new Image(); macroImg.src = 'macrophage.svg';
+const bcellImg = new Image(); bcellImg.src = 'bcell.svg';
+const abFlyingImg = new Image(); abFlyingImg.src = 'antibody_flying.svg';
+const abStuckImg = new Image(); abStuckImg.src = 'antibody_stuck.svg';
+const eosinImg = new Image(); eosinImg.src = 'eosinophil.svg';
+const neutrophilImg = new Image(); neutrophilImg.src = 'neutrophil.svg';
+const helperTImg = new Image(); helperTImg.src = 'helper_t_cell.svg';
+const cytotoxicTImg = new Image(); cytotoxicTImg.src = 'cytotoxic_t_cell.svg';
+const basophilImg = new Image(); basophilImg.src = 'basophil.svg';
+const monocyteImg = new Image(); monocyteImg.src = 'monocyte.svg';
+const naturalKillerImg = new Image(); naturalKillerImg.src = 'nk2.svg';
+const dendriticImg = new Image(); dendriticImg.src = 'dendritic_cell.svg';
+const dendriticAngryImg = new Image(); dendriticAngryImg.src = 'dendritic_cell_angry.svg';
+const progenitorImg = new Image(); progenitorImg.src = 'myeloid_progenitor.svg';
+const hscImg = new Image(); hscImg.src = 'hematopoietic_stem_cell.svg';
+const hscMysteryImg = new Image(); hscMysteryImg.src = 'hsc_mystery.svg';
+const cytokineImg = new Image(); cytokineImg.src = 'cytokine.svg';
+const dnaImg = new Image(); dnaImg.src = 'dna.svg';
+const finalBillImg = new Image(); finalBillImg.src = 'kingbill.png';
+
+// Shared AudioContext (prevents sound cutoff)
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+function rand(min, max) { return Math.random() * (max - min) + min; }
+function dist(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
+
+function createFibroblast() {
+  return {
+    x: rand(50, W-50),
+    y: rand(50, H-50),
+    vx: rand(-0.3, 0.3),
+    vy: rand(-0.3, 0.3),
+    infected: false,
+    infectTime: 0
+  };
+}
+
+function createMacrophage(x, y) {
+  return {
+    x: x ?? rand(50, W-50),
+    y: y ?? rand(50, H-50),
+    vx: rand(-0.3, 0.3),
+    vy: rand(-0.3, 0.3),
+    speed: 0.8
+  };
+}
+
+function createBCell() {
+  return {
+    x: rand(80, W-80),
+    y: rand(80, H-80),
+    vx: rand(-0.2, 0.2),
+    vy: rand(-0.2, 0.2),
+    shootTimer: 600 // 10 seconds between shots
+  };
+}
+
+function createEosinophil() {
+  return {
+    x: rand(80, W-80),
+    y: rand(80, H-80),
+    vx: rand(-0.3, 0.3),
+    vy: rand(-0.3, 0.3),
+    speed: 0.55 // slower than macrophage (0.8)
+  };
+}
+
+function createNeutrophil() {
+  return {
+    x: rand(80, W-80),
+    y: rand(80, H-80),
+    vx: rand(-0.15, 0.15),
+    vy: rand(-0.15, 0.15),
+    speed: 0.15 // same as Bill (lazy drift)
+  };
+}
+
+function createHelperTCell() {
+  return {
+    x: rand(80, W-80),
+    y: rand(80, H-80),
+    vx: 0,
+    vy: 0,
+    speed: 0.45 // chases Bill, pushes on touch
+  };
+}
+
+function createCytotoxicTCell() {
+  // Fast, zig-zag mover: picks a random direction, then wobbles perpendicular
+  const angle = rand(0, Math.PI * 2);
+  const speed = 1.8;
+  return {
+    x: rand(80, W-80),
+    y: rand(80, H-80),
+    vx: Math.cos(angle) * speed,
+    vy: Math.sin(angle) * speed,
+    baseVx: Math.cos(angle) * speed,
+    baseVy: Math.sin(angle) * speed,
+    wobble: rand(0, Math.PI * 2) // phase for zig-zag wobble
+  };
+}
+
+function createBasophil() {
+  return {
+    x: rand(80, W-80),
+    y: rand(80, H-80),
+    vx: rand(-0.3, 0.3),
+    vy: rand(-0.3, 0.3),
+    speed: 0.3 // hefty but faster than neutrophil (0.15)
+  };
+}
+
+function createNaturalKiller() {
+  // NK Ninja: slow assassin, chases Bill, blinks randomly to dodge + periodic dramatic teleport
+  return {
+    x: rand(80, W-80),
+    y: rand(80, H-80),
+    vx: 0,
+    vy: 0,
+    speed: 0.6,
+    blinkCooldown: 0,
+    teleportTimer: rand(0, 600) // stagger initial teleports
+  };
+}
+
+function createDendriticCell() {
+  const baseVx = rand(-0.3, 0.3);
+  const baseVy = rand(-0.3, 0.3);
+  return {
+    x: rand(120, W-120),
+    y: rand(120, H-120),
+    vx: baseVx,
+    vy: baseVy,
+    baseVx, // for angry speed scaling
+    baseVy,
+    cytokines: [], // up to 3-4 active
+    cytokineTimer: rand(0, 300), // first placement in 0-5s
+    angryTimer: 0 // >0 = show angry SVG (5s after being shot)
+  };
+}
+
+function spawnParticles(x, y, color, count) {
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x, y,
+      vx: rand(-3, 3),
+      vy: rand(-3, 3),
+      life: rand(20, 40),
+      color
+    });
+  }
+}
+
+function playSound(type) {
+  if (type === 'shoot') {
+    // Slimy squirt — noise burst + rising sine (viral particle fired)
+    const noise = audioCtx.createBufferSource();
+    const nbuf = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.12, audioCtx.sampleRate);
+    const nd = nbuf.getChannelData(0);
+    for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
+    noise.buffer = nbuf;
+    const nfil = audioCtx.createBiquadFilter();
+    nfil.type = 'lowpass';
+    nfil.frequency.value = 800;
+    const ng = audioCtx.createGain();
+    ng.gain.value = 0.1;
+    const sine = audioCtx.createOscillator();
+    sine.type = 'sine';
+    sine.frequency.value = 300;
+    const sg = audioCtx.createGain();
+    sg.gain.value = 0.08;
+    sine.frequency.setValueAtTime(300, audioCtx.currentTime);
+    sine.frequency.linearRampToValueAtTime(600, audioCtx.currentTime + 0.1);
+    const mix = audioCtx.createGain();
+    mix.gain.value = 0.9;
+    noise.connect(nfil); nfil.connect(ng); ng.connect(mix);
+    sine.connect(sg); sg.connect(mix);
+    mix.connect(audioCtx.destination);
+    noise.start();
+    sine.start();
+    ng.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+    sg.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+    setTimeout(() => { noise.stop(); sine.stop(); }, 300);
+  } else if (type === 'infect') {
+    // Gulp plop — quick sine dip + soft noise (cell absorbs virus)
+    const osc = audioCtx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.value = 700;
+    const og = audioCtx.createGain();
+    og.gain.value = 0.12;
+    osc.frequency.setValueAtTime(700, audioCtx.currentTime);
+    osc.frequency.linearRampToValueAtTime(380, audioCtx.currentTime + 0.08);
+    const noise = audioCtx.createBufferSource();
+    const nb = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.08, audioCtx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for (let i = 0; i < nd.length; i++) nd[i] = (Math.random() - 0.5) * 2;
+    noise.buffer = nb;
+    const nf = audioCtx.createBiquadFilter();
+    nf.type = 'lowpass'; nf.frequency.value = 1200;
+    const ng = audioCtx.createGain(); ng.gain.value = 0.05;
+    osc.connect(og); noise.connect(nf); nf.connect(ng);
+    og.connect(audioCtx.destination); ng.connect(audioCtx.destination);
+    osc.start(); noise.start();
+    og.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+    ng.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.18);
+    setTimeout(() => { osc.stop(); noise.stop(); }, 300);
+  } else if (type === 'lyse') {
+    // Squelchy pop — noise burst + quick pitch drop (cell bursts)
+    const osc = audioCtx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.value = 280;
+    const og = audioCtx.createGain();
+    og.gain.value = 0.15;
+    osc.frequency.linearRampToValueAtTime(120, audioCtx.currentTime + 0.15);
+    const noise = audioCtx.createBufferSource();
+    const nb = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.2, audioCtx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for (let i = 0; i < nd.length; i++) nd[i] = (Math.random() - 0.5) * 2;
+    noise.buffer = nb;
+    const nf = audioCtx.createBiquadFilter();
+    nf.type = 'lowpass'; nf.frequency.value = 600;
+    const ng = audioCtx.createGain(); ng.gain.value = 0.12;
+    osc.connect(og); noise.connect(nf); nf.connect(ng);
+    og.connect(audioCtx.destination); ng.connect(audioCtx.destination);
+    osc.start(); noise.start();
+    og.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+    ng.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+    setTimeout(() => { osc.stop(); noise.stop(); }, 450);
+  } else if (type === 'explode') {
+    // Splatter — 3 layered pops + noise (macrophage bursts)
+    for (let k = 0; k < 3; k++) {
+      setTimeout(() => {
+        const n = audioCtx.createBufferSource();
+        const nb = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.15, audioCtx.sampleRate);
+        const nd = nb.getChannelData(0);
+        for (let i = 0; i < nd.length; i++) nd[i] = (Math.random() - 0.5) * 2;
+        n.buffer = nb;
+        const f = audioCtx.createBiquadFilter();
+        f.type = 'lowpass'; f.frequency.value = 500 + k * 200;
+        const g = audioCtx.createGain();
+        g.gain.value = 0.2 - k * 0.04;
+        n.connect(f); f.connect(g); g.connect(audioCtx.destination);
+        n.start();
+        g.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+        setTimeout(() => n.stop(), 300);
+      }, k * 40);
+    }
+  } else if (type === 'ow') {
+    // Sad whimper — descending saw with wobble (Bill hurt)
+    const osc = audioCtx.createOscillator();
+    osc.type = 'sawtooth';
+    osc.frequency.value = 280;
+    const g = audioCtx.createGain();
+    g.gain.value = 0.2;
+    osc.frequency.linearRampToValueAtTime(90, audioCtx.currentTime + 0.4);
+    const lfo = audioCtx.createOscillator();
+    lfo.type = 'sine'; lfo.frequency.value = 6;
+    const lfoG = audioCtx.createGain();
+    lfoG.gain.value = 20;
+    const lfoF = audioCtx.createBiquadFilter();
+    lfoF.type = 'lowpass'; lfoF.frequency.value = 800;
+    lfo.connect(lfoG); lfoG.connect(osc.frequency);
+    osc.connect(lfoF); lfoF.connect(g); g.connect(audioCtx.destination);
+    osc.start(); lfo.start();
+    g.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
+    setTimeout(() => { osc.stop(); lfo.stop(); }, 700);
+  } else if (type === 'win') {
+    // Chipper victory beeps — ascending tone sequence
+    const notes = [660, 770, 880, 990];
+    notes.forEach((freq, i) => {
+      setTimeout(() => {
+        const osc = audioCtx.createOscillator();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        const g = audioCtx.createGain();
+        g.gain.value = 0.15;
+        osc.connect(g); g.connect(audioCtx.destination);
+        osc.start();
+        g.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
+        setTimeout(() => osc.stop(), 300);
+      }, i * 80);
+    });
+  } else if (type === 'macroOw') {
+    // Funny voice-like "OW!" for macrophage dividing
+    const osc = audioCtx.createOscillator();
+    osc.type = 'sawtooth';
+    osc.frequency.value = 450;
+    const g = audioCtx.createGain();
+    g.gain.value = 0.3;
+
+    // Bandpass to shape vowel "o" formant
+    const formant = audioCtx.createBiquadFilter();
+    formant.type = 'bandpass';
+    formant.frequency.value = 950;
+    formant.Q.value = 4;
+
+    // Pitch: O → W (drop then slight rise like a voice)
+    osc.frequency.setValueAtTime(450, audioCtx.currentTime);
+    osc.frequency.linearRampToValueAtTime(160, audioCtx.currentTime + 0.2);
+    osc.frequency.linearRampToValueAtTime(220, audioCtx.currentTime + 0.45);
+
+    osc.connect(formant);
+    formant.connect(g);
+    g.connect(audioCtx.destination);
+
+    osc.start();
+    g.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.7);
+    setTimeout(() => osc.stop(), 800);
+  } else if (type === 'growl') {
+    // Deep animalistic growl — low saw + noise + LFO wobble
+    const baseFreq = 95;
+    const osc = audioCtx.createOscillator();
+    osc.type = 'sawtooth';
+    osc.frequency.value = baseFreq;
+
+    // LFO pitch wobble for growl texture
+    const lfo = audioCtx.createOscillator();
+    lfo.type = 'sine';
+    lfo.frequency.value = 10;
+    const lfoGain = audioCtx.createGain();
+    lfoGain.gain.value = 18; // wobble depth
+    lfo.connect(lfoGain);
+    lfoGain.connect(osc.frequency);
+
+    // Noise for grit
+    const noise = audioCtx.createBufferSource();
+    const nbuf = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.5, audioCtx.sampleRate);
+    const nd = nbuf.getChannelData(0);
+    for (let i = 0; i < nd.length; i++) nd[i] = (Math.random() - 0.5) * 2;
+    noise.buffer = nbuf;
+    const nf = audioCtx.createBiquadFilter();
+    nf.type = 'lowpass';
+    nf.frequency.value = 600;
+
+    // Lowpass for rumble
+    const lp = audioCtx.createBiquadFilter();
+    lp.type = 'lowpass';
+    lp.frequency.value = 400;
+
+    const g = audioCtx.createGain();
+    g.gain.value = 0.35;
+
+    // Mix: osc + filtered noise
+    osc.connect(lp);
+    noise.connect(nf);
+    nf.connect(lp);
+    lp.connect(g);
+    g.connect(audioCtx.destination);
+
+    osc.start();
+    lfo.start();
+    noise.start();
+    g.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
+    setTimeout(() => { osc.stop(); lfo.stop(); noise.stop(); }, 700);
+  } else if (type === 'ding') {
+    // Soft organic blop for B cell respawn (matches game vibe)
+    const noise = audioCtx.createBufferSource();
+    const nbuf = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.25, audioCtx.sampleRate);
+    const nd = nbuf.getChannelData(0);
+    for (let i = 0; i < nd.length; i++) nd[i] = (Math.random() - 0.5) * 2;
+    noise.buffer = nbuf;
+    const nf = audioCtx.createBiquadFilter();
+    nf.type = 'lowpass';
+    nf.frequency.value = 900;
+    const ng = audioCtx.createGain();
+    ng.gain.value = 0.15;
+
+    const osc = audioCtx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.value = 280;
+    const og = audioCtx.createGain();
+    og.gain.value = 0.1;
+
+    // Quick decay envelope
+    ng.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
+    og.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
+
+    noise.connect(nf); nf.connect(ng); ng.connect(audioCtx.destination);
+    osc.connect(og); og.connect(audioCtx.destination);
+
+    noise.start();
+    osc.start();
+    setTimeout(() => { noise.stop(); osc.stop(); }, 400);
+  } else if (type === 'beep') {
+    // Happy quick ascending beep for DNA collect
+    const notes = [880, 1320];
+    notes.forEach((freq, i) => {
+      setTimeout(() => {
+        const osc = audioCtx.createOscillator();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        const g = audioCtx.createGain();
+        g.gain.value = 0.2;
+        osc.connect(g);
+        g.connect(audioCtx.destination);
+        osc.start();
+        g.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+        setTimeout(() => osc.stop(), 200);
+      }, i * 50);
+    });
+  } else if (type === 'goingViral') {
+    // Triumphant whoosh — rising tones + noise sweep
+    // Noise whoosh
+    const noise = audioCtx.createBufferSource();
+    const nbuf = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.6, audioCtx.sampleRate);
+    const nd = nbuf.getChannelData(0);
+    for (let i = 0; i < nd.length; i++) nd[i] = (Math.random() - 0.5) * 2;
+    noise.buffer = nbuf;
+    const nf = audioCtx.createBiquadFilter();
+    nf.type = 'lowpass';
+    nf.frequency.value = 400;
+    nf.frequency.linearRampToValueAtTime(2200, audioCtx.currentTime + 0.5);
+    const ng = audioCtx.createGain();
+    ng.gain.value = 0.3;
+    ng.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
+
+    // Rising chord (3 tones)
+    [880, 1100, 1320].forEach((freq, i) => {
+      const osc = audioCtx.createOscillator();
+      osc.type = 'sawtooth';
+      osc.frequency.value = freq;
+      const g = audioCtx.createGain();
+      g.gain.value = 0.08;
+      g.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
+      const f = audioCtx.createBiquadFilter();
+      f.type = 'lowpass';
+      f.frequency.value = 1800;
+      osc.connect(f); f.connect(g); g.connect(audioCtx.destination);
+      osc.start();
+      setTimeout(() => osc.stop(), 700);
+    });
+
+    noise.connect(nf); nf.connect(ng); ng.connect(audioCtx.destination);
+    noise.start();
+    setTimeout(() => noise.stop(), 700);
+  }
+}
+
+function reset(keepLives = false) {
+  score = 0;
+  gameOver = false;
+  time = 0;
+  graceTimer = 120; // 2 seconds invincibility at level start
+  levelStartTime = Date.now();
+  bill.smiling = true;
+  bill.frozenTimer = 0;
+  levelComplete = false;
+  goingViralTimer = 0;
+  if (!keepLives) {
+    lives = 3;  // Only reset lives on fresh start / "Restart Game"
+  }
+  naturalSpawns = 0;
+  shotsFired = 0;
+  shotsHit = 0;
+  fibroblastsInfected = 0;
+  macrophagesDestroyed = 0;
+  stuckAntibodies = 0;
+  dna = [];
+  // dnaCount persists across levels (DNAs obtained carry over)
+  fibroblasts = [];
+  macrophages = [];
+  glycoproteins = [];
+  darts = [];
+  particles = [];
+  bcells = [];
+  eosinophils = [];
+  neutrophils = [];
+  helperTCells = [];
+  cytotoxicTCells = [];
+  basophils = [];
+  dendriticCells = [];
+  naturalKillerNinjas = [];
+  nkRespawnTimer = 0;
+  histamineClouds = [];
+  antibodies = [];
+  eosinRespawnTimer = 0;
+  neutrophilRespawnTimer = 0;
+  bcellRespawnTimer = 0;
+  helperTRespawnTimer = 0;
+  cytotoxicTRespawnTimer = 0;
+  basophilRespawnTimer = 0;
+  for (let i = 0; i < FIBRO_COUNT; i++) fibroblasts.push(createFibroblast());
+  // More macrophages in higher levels (none on level 3-7)
+  let macroCount = MACRO_START + Math.floor((level - 1) * 1.5);
+  if (level === 3 || level === 4 || level === 5 || level === 6 || level === 7 || level === 8 || level === 9) macroCount = 0;
+  for (let i = 0; i < macroCount; i++) macrophages.push(createMacrophage());
+  // B Cells: level 1=none, level 2=2, levels 3-6=none
+  let bcellCount = 0;
+  if (level === 2) bcellCount = 2;
+  for (let i = 0; i < bcellCount; i++) bcells.push(createBCell());
+  // Eosinophils start appearing in level 3+ (none on level 4-7)
+  let eosinCount = (level === 4 || level === 5 || level === 6 || level === 7) ? 0 : Math.max(0, level - 2);
+  if (level === 3) eosinCount = 3; // start with 3 on level 3, spawn more over time
+  eosinCount = Math.min(10, eosinCount); // cap at 10
+  for (let i = 0; i < eosinCount; i++) eosinophils.push(createEosinophil());
+  // Level 4: only neutrophils (lazy, convert fibroblasts)
+  if (level === 4) {
+    neutrophils.push(createNeutrophil()); // start with 1
+  }
+  // Level 5: 5 helper T cells + 3 cytotoxic T cells (zig-zag, fast, kill on touch)
+  if (level === 5) {
+    for (let i = 0; i < 5; i++) helperTCells.push(createHelperTCell());
+    for (let i = 0; i < 3; i++) cytotoxicTCells.push(createCytotoxicTCell());
+  }
+  // Level 6: basophils + cytotoxic T cells (1 start + 1 per 10s)
+  if (level === 6) {
+    for (let i = 0; i < 4; i++) basophils.push(createBasophil());
+    cytotoxicTCells.push(createCytotoxicTCell());
+    cytotoxicTRespawnTimer = 600; // spawn another in 10s
+  }
+  // Level 7: 4 immortal dendritic cells (no respawn, can't be killed)
+  if (level === 7) {
+    for (let i = 0; i < 4; i++) {
+      const dc = createDendriticCell();
+      // Spawn from left/right edges, not on Bill
+      dc.x = (i % 2 === 0) ? rand(81, 100) : rand(W - 100, W - 81);
+      dc.y = rand(100, H - 100);
+      dendriticCells.push(dc);
+    }
+  }
+  // Level 8: NK Ninja assassins — staggered spawns, blink dodge
+  if (level === 8) {
+    naturalKillerNinjas = []; // spawn on schedule below
+    // No other enemies — pure ninja fight
+    macrophages = [];
+    eosinophils = [];
+    neutrophils = [];
+    helperTCells = [];
+    cytotoxicTCells = [];
+    basophils = [];
+    dendriticCells = [];
+  }
+  // Level 9: Myeloid Progenitor + Monocytes (armor layers mechanic)
+  if (level === 9) {
+    progenitor = { x: 150, y: 150, r: 60, armor: 6, maxArmor: 6, spawnTimer: 0, pulse: 0, vx: rand(-0.4, 0.4), vy: rand(-0.3, 0.3) };
+    monocytes = [];
+    for (let i = 0; i < 6; i++) {
+      const a = (i / 6) * Math.PI * 2;
+      const rx = 180 + (i % 3) * 40; // 180, 220, 260, 180, 220, 260
+      const ry = 160 + ((i + 1) % 3) * 35; // 160, 195, 230, 160, 195, 230
+      monocytes.push({ x: progenitor.x + Math.cos(a)*rx, y: progenitor.y + Math.sin(a)*ry, vx: 0, vy: 0, orbitRx: rx, orbitRy: ry, phase: a });
+    }
+    progenitorSpawnTimer = 0;
+    // Clean other enemies
+    macrophages = [];
+    eosinophils = [];
+    neutrophils = [];
+    helperTCells = [];
+    cytotoxicTCells = [];
+    basophils = [];
+    dendriticCells = [];
+    naturalKillerNinjas = [];
+  }
+  // Level 10: Hematopoietic Stem Cell boss fight
+  if (level === 10) {
+    hscBoss = {
+      x: W / 2,
+      y: 180,
+      health: 800,
+      maxHealth: 800,
+      phase: 1, // 1: calm, 2: surge, 3: desperation
+      vx: rand(-1.2, 1.2),
+      vy: rand(-0.6, 0.6),
+      spawnTimer: 0,
+      pulse: 0
+    };
+    // No fibroblasts in boss fight
+    fibroblasts = [];
+    // No regular enemies — boss spawns them
+    macrophages = [];
+    eosinophils = [];
+    neutrophils = [];
+    helperTCells = [];
+    cytotoxicTCells = [];
+    basophils = [];
+    dendriticCells = [];
+    timerEl.textContent = 'BOSS';
+    crowns = [];
+    crownTimer = 0;
+  }
+  gameOverEl.style.display = 'none';
+  youDiedEl.style.display = 'none';
+  levelSplash.style.display = 'none';
+  artSplash.style.display = 'none';
+  cutsceneSplash.style.display = 'none';
+  uiScore.textContent = '0';
+  uiDna.textContent = '0';
+  timerEl.textContent = '60';
+  // Dashboard init
+  document.getElementById('dbscore').textContent = '0';
+  totalScoreEl.textContent = totalScore;
+  document.getElementById('dblives').innerHTML = '❤️❤️❤️';
+  document.getElementById('dbdna').textContent = '0/10';
+  document.getElementById('dblevel').textContent = level;
+  // Render lives as bill images based on current lives count
+  livesEl.innerHTML = '';
+  for (let i = 0; i < lives; i++) {
+    const img = document.createElement('img');
+    img.src = 'bill.svg';
+    img.style.width = '40px';
+    img.style.height = '40px';
+    livesEl.appendChild(img);
+  }
+}
+
+function handleDeath() {
+  if (graceTimer > 0) return; // invincibility at level start
+  gameLoopRunning = false; // pause game while death screen up
+  playSound('ow');
+  lives--;
+  // Save level score to global total (on death, level score resets on restart)
+  totalScore += score;
+  // Update lives UI
+  livesEl.innerHTML = '';
+  for (let i = 0; i < lives; i++) {
+    const img = document.createElement('img');
+    img.src = 'bill.svg';
+    img.style.width = '40px';
+    img.style.height = '40px';
+    livesEl.appendChild(img);
+  }
+  if (lives > 0) {
+    // Show "You Died" splash
+    // Pick image based on death cause
+    let imgSrc;
+    if (deathCause === 'bcell') {
+      imgSrc = 'bill_stuck.svg';
+    } else if (deathCause === 'helperT') {
+      imgSrc = 'bill_helpert.svg';
+    } else {
+      imgSrc = 'bill_destroyed.svg';
+    }
+    youDiedBill.innerHTML = `<img src="${imgSrc}" style="width:100px;height:100px;">`;
+
+    // Show remaining lives icons + text
+    remainingLivesEl.innerHTML = '';
+    for (let i = 0; i < lives; i++) {
+      const img = document.createElement('img');
+      img.src = 'bill.svg';
+      img.style.width = '32px';
+      img.style.height = '32px';
+      remainingLivesEl.appendChild(img);
+    }
+    const txt = document.createElement('span');
+    txt.textContent = `Remaining Lives: ${lives}`;
+    txt.style.marginLeft = '8px';
+    remainingLivesEl.appendChild(txt);
+
+    youDiedEl.style.display = 'block';
+  } else {
+    gameOver = true;
+    const finalScore = totalScore; // capture before reset
+    totalScore = 0; // reset total score on game over
+    // Pick image and message based on death cause
+    let imgSrc, msg;
+    if (deathCause === 'bcell') {
+      imgSrc = 'bill_stuck.svg';
+      msg = 'Overwhelmed by antibodies!';
+    } else if (deathCause === 'helperT') {
+      imgSrc = 'bill_helpert.svg';
+      msg = 'Pushed into death by a helper T cell!';
+    } else if (deathCause === 'cytotoxicT') {
+      imgSrc = 'bill_destroyed.svg';
+      msg = 'Obliterated by a cytotoxic T cell!';
+    } else if (deathCause === 'dendritic') {
+      imgSrc = 'bill_destroyed.svg';
+      msg = 'Trapped by a dendritic cell!';
+    } else {
+      // macrophage or eosinophil
+      imgSrc = 'bill_destroyed.svg';
+      if (deathCause === 'eosinophil') msg = 'Eaten by an eosinophil!';
+      else msg = 'Destroyed by a macrophage!';
+    }
+    gameOverBill.innerHTML = `<img src="${imgSrc}" style="width:120px;height:120px;">`;
+    gameOverMsg.textContent = msg;
+    gameOverEl.style.display = 'block';
+    // Offer name entry if finalScore qualifies for leaderboard
+    maybePromptNameEntry(finalScore);
+  }
+}
+
+canvas.addEventListener('mousemove', e => {
+  const rect = canvas.getBoundingClientRect();
+  mouse.x = e.clientX - rect.left;
+  mouse.y = e.clientY - rect.top;
+});
+
+canvas.addEventListener('click', () => {
+  if (gameOver) {
+    level = 1;
+    reset();
+  }
+});
+
+nextLevelBtn.addEventListener('click', () => {
+  level++;
+  // Show level intro splash instead of immediately resetting
+  levelSplash.style.display = 'none';
+  showLevelIntroSplash(level);
+});
+
+startBtn.addEventListener('click', () => {
+  level = 1;
+  nextLevelBtn.textContent = 'Next Level';
+  showGameStartSplash();
+});
+
+instrBtn.addEventListener('click', () => {
+  window.location.href = 'instructions.html';
+});
+
+// Game over buttons
+startOverBtn.addEventListener('click', () => {
+  gameOverEl.style.display = 'none';
+  youDiedEl.style.display = 'none';
+  level = 1;
+  reset();
+  gameLoopRunning = true;
+  loop();
+});
+
+mainMenuBtn.addEventListener('click', () => {
+  gameOverEl.style.display = 'none';
+  youDiedEl.style.display = 'none';
+  reset(); // full reset like game over
+  startSplash.style.display = 'block';
+});
+
+// "You Died" splash buttons
+restartLevelBtn.addEventListener('click', () => {
+  youDiedEl.style.display = 'none';
+  reset(true); // score resets to 0, totalScore already saved on death
+  gameLoopRunning = true;
+  loop();
+});
+
+restartGameBtn.addEventListener('click', () => {
+  if (confirm('Return to menu? You will lose your progress.')) {
+    youDiedEl.style.display = 'none';
+    reset(); // full reset like game over
+    startSplash.style.display = 'block';
+  }
+});
+
+document.getElementById('devbtn').addEventListener('click', (e) => {
+  e.preventDefault();
+  startSplash.style.display = 'none';
+  devLevels.style.display = 'block';
+  // Populate level buttons
+  levelButtons.innerHTML = '';
+  for (let lv = 1; lv <= 10; lv++) {
+    const btn = document.createElement('button');
+    btn.textContent = 'Level ' + lv;
+    btn.style.padding = '10px 14px';
+    btn.style.fontSize = '16px';
+    btn.style.cursor = 'pointer';
+    btn.onclick = () => {
+      level = lv;
+      devLevels.style.display = 'none';
+      // Show level intro splash first so you can preview it
+      showLevelIntroSplash(lv);
+    };
+    levelButtons.appendChild(btn);
+  }
+});
+
+devBack.addEventListener('click', () => {
+  devLevels.style.display = 'none';
+  startSplash.style.display = 'block';
+});
+
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space' && !gameOver && !levelComplete) {
+    e.preventDefault();
+    // Unlimited ammo!
+    shotsFired++;
+    playSound('shoot');
+    // Shoot in direction of mouse
+    let dx = mouse.x - bill.x;
+    let dy = mouse.y - bill.y;
+    let len = Math.hypot(dx, dy) || 1;
+    glycoproteins.push({
+      x: bill.x,
+      y: bill.y,
+      vx: (dx / len) * 6,
+      vy: (dy / len) * 6
+    });
+  }
+  // Lysis on Shift: kill all infected fibroblasts
+  if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
+    if (!gameOver && !levelComplete) {
+      let infectedCount = fibroblasts.filter(f => f.infected).length;
+      if (infectedCount > 0) {
+        // Score scales exponentially with number of infected cells at once
+        score += Math.pow(2, infectedCount - 1) * 2;
+        playSound('lyse');
+        if (infectedCount >= 5) {
+          goingViralTimer = 90; // ~1.5 seconds
+          playSound('goingViral');
+        }
+        fibroblasts.forEach(f => {
+          if (f.infected) {
+            spawnParticles(f.x, f.y, '#88ff88', 8);
+            // Small chance to drop DNA per dying fibroblast
+            if (Math.random() < 0.12) {
+              dna.push({ x: f.x, y: f.y, vx: rand(-0.4, 0.4), vy: rand(-0.4, 0.4) });
+            }
+            // Going Viral: each infected fibroblast shoots 2 darts
+            if (infectedCount >= 5) {
+              for (let k = 0; k < 2; k++) {
+                darts.push({ x: f.x, y: f.y });
+              }
+            }
+          }
+        });
+        fibroblasts = fibroblasts.filter(f => !f.infected);
+        uiScore.textContent = score;
+      }
+    }
+  }
+});
+
+function update() {
+  if (gameOver || levelComplete || youDiedEl.style.display === 'block' || startSplash.style.display === 'block') return;
+  time++;
+
+  // Time remaining in level
+  const elapsed = Date.now() - levelStartTime;
+  const secondsLeft = Math.max(0, Math.ceil((LEVEL_DURATION_MS - elapsed) / 1000));
+
+  // Decrement freeze timer
+  if (bill.frozenTimer > 0) bill.frozenTimer--;
+  // Decrement grace period invincibility
+  if (graceTimer > 0) graceTimer--;
+
+  // Move Bill toward mouse (frozen if hit by histamine cloud)
+  let dx = mouse.x - bill.x;
+  let dy = mouse.y - bill.y;
+  bill.facing = Math.atan2(dy, dx);
+  const billSpeed = bill.frozenTimer > 0 ? 0 : 0.15;
+  bill.x += dx * billSpeed;
+  bill.y += dy * billSpeed;
+  bill.x = Math.max(10, Math.min(W - 10, bill.x));
+  bill.y = Math.max(10, Math.min(H - 10, bill.y));
+
+  // Update fibroblasts
+  fibroblasts.forEach(f => {
+    f.x += f.vx;
+    f.y += f.vy;
+    if (f.x < 20 || f.x > W - 20) f.vx *= -1;
+    if (f.y < 20 || f.y > H - 20) f.vy *= -1;
+    if (f.infected) f.infectTime++;
+  });
+
+  // Regenerate fibroblasts occasionally (much slower in level 10)
+  const fibroChance = level === 10 ? 0.001 : 0.02;
+  if (Math.random() < fibroChance && fibroblasts.length < FIBRO_COUNT + 10) {
+    fibroblasts.push(createFibroblast());
+  }
+
+  // Update DNA (float like fibroblasts)
+  dna.forEach(d => {
+    d.x += d.vx;
+    d.y += d.vy;
+    if (d.x < 30 || d.x > W - 30) d.vx *= -1;
+    if (d.y < 30 || d.y > H - 30) d.vy *= -1;
+  });
+
+  // Update macrophages
+  macrophages.forEach(m => {
+    // Drift aimlessly at 0.8 speed
+    m.x += m.vx;
+    m.y += m.vy;
+    if (m.x < 20 || m.x > W - 20) m.vx *= -1;
+    if (m.y < 20 || m.y > H - 20) m.vy *= -1;
+    // Check collision with Bill
+    if (dist(m, bill) < 20) {
+      bill.smiling = false;
+      deathCause = 'macrophage';
+      handleDeath();
+    }
+  });
+
+  // Update B Cells
+  bcells.forEach(b => {
+    // Drift slowly
+    b.x += b.vx;
+    b.y += b.vy;
+    if (b.x < 40 || b.x > W - 40) b.vx *= -1;
+    if (b.y < 40 || b.y > H - 40) b.vy *= -1;
+
+    // Touching Bill = death (B cell is an immune cell!)
+    if (dist(b, bill) < 28) {
+      deathCause = 'bcell';
+      handleDeath();
+    }
+
+    // Shoot every 10 seconds
+    b.shootTimer--;
+    if (b.shootTimer <= 0) {
+      // Fire antibody toward Bill (fixed speed 3.0)
+      let dx = bill.x - b.x;
+      let dy = bill.y - b.y;
+      let len = Math.hypot(dx, dy) || 1;
+      antibodies.push({
+        x: b.x,
+        y: b.y,
+        vx: (dx / len) * 3.0,
+        vy: (dy / len) * 3.0,
+        stuck: false
+      });
+      b.shootTimer = 600; // 10 seconds
+    }
+  });
+
+  // Update eosinophils: each targets one infected fibroblast, wander randomly otherwise
+  // Collect available infected fibroblasts (unclaimed)
+  let availableTargets = fibroblasts.filter(f => f.infected);
+  eosinophils.forEach((e, i) => {
+    // Separation: repel from nearby eosinophils
+    eosinophils.forEach((other, j) => {
+      if (i === j) return;
+      let dx = e.x - other.x;
+      let dy = e.y - other.y;
+      let d = Math.hypot(dx, dy);
+      if (d < 40 && d > 0.01) {
+        let push = (40 - d) / d * 0.6;
+        e.vx += dx * push;
+        e.vy += dy * push;
+      }
+    });
+
+    // Find nearest available target
+    let target = null;
+    let bestDist = Infinity;
+    for (let k = 0; k < availableTargets.length; k++) {
+      const f = availableTargets[k];
+      const d = dist(e, f);
+      if (d < bestDist) {
+        bestDist = d;
+        target = f;
+      }
+    }
+    // Remove claimed target so only one eosinophil gets it
+    if (target) {
+      const idx = availableTargets.indexOf(target);
+      if (idx !== -1) availableTargets.splice(idx, 1);
+    }
+
+    // Move toward target (or wander randomly if none)
+    if (target) {
+      let dx = target.x - e.x;
+      let dy = target.y - e.y;
+      let len = Math.hypot(dx, dy) || 1;
+      e.vx = (dx / len) * e.speed;
+      e.vy = (dy / len) * e.speed;
+    } else {
+      // Random wander
+      e.vx = rand(-e.speed, e.speed);
+      e.vy = rand(-e.speed, e.speed);
+    }
+
+    e.x += e.vx;
+    e.y += e.vy;
+    // Bounce off walls
+    if (e.x < 40 || e.x > W - 40) e.vx *= -1;
+    if (e.y < 40 || e.y > H - 40) e.vy *= -1;
+
+    // Kill Bill on touch
+    if (dist(e, bill) < 30) {
+      deathCause = 'eosinophil';
+      handleDeath();
+    }
+
+    // Cure infected cell on touch
+    if (target && bestDist < 35) {
+      target.infected = false;
+      spawnParticles(target.x, target.y, '#aaffff', 8);
+      playSound('infect'); // reuse infect sound (soft cure)
+    }
+  });
+
+  // Respawn eosinophil after delay if killed (none on level 4-6)
+  if (eosinRespawnTimer > 0 && level !== 4 && level !== 5 && level !== 6) {
+    eosinRespawnTimer--;
+    if (eosinRespawnTimer === 0) {
+      let eosinCount = Math.max(0, level - 2);
+      if (level === 3) eosinCount = 5;
+      eosinCount = Math.min(10, eosinCount); // cap at 10
+      if (eosinophils.length < eosinCount) {
+        eosinophils.push(createEosinophil());
+      }
+    }
+  }
+
+  // Update neutrophils (level 4 only): chase fibroblasts, convert on touch
+  neutrophils.forEach((n, i) => {
+    // Find closest fibroblast to chase
+    let target = null;
+    let closestDist = Infinity;
+    for (const f of fibroblasts) {
+      const d = dist(n, f);
+      if (d < closestDist) { closestDist = d; target = f; }
+    }
+    if (target) {
+      // Chase at speed 0.15
+      const dx = target.x - n.x;
+      const dy = target.y - n.y;
+      const d = Math.sqrt(dx*dx + dy*dy) || 1;
+      n.vx = (dx / d) * 0.15;
+      n.vy = (dy / d) * 0.15;
+    }
+    // else: no fibroblasts — keep current vx/vy (drift)
+
+    n.x += n.vx;
+    n.y += n.vy;
+    // Bounce off walls
+    if (n.x < 40 || n.x > W - 40) n.vx *= -1;
+    if (n.y < 40 || n.y > H - 40) n.vy *= -1;
+
+    // Touch Bill = death
+    if (dist(n, bill) < 30) {
+      deathCause = 'neutrophil';
+      handleDeath();
+    }
+
+    // Touch fibroblast (any, even infected) → convert to neutrophil
+    for (let j = fibroblasts.length - 1; j >= 0; j--) {
+      const f = fibroblasts[j];
+      if (dist(n, f) < 35) {
+        fibroblasts.splice(j, 1);
+        // Spawn neutrophil at the fibroblast's position (in-place conversion)
+        const n2 = createNeutrophil();
+        n2.x = f.x; n2.y = f.y;
+        neutrophils.push(n2);
+        spawnParticles(f.x, f.y, '#ffff88', 10);
+        playSound('infect'); // reuse soft sound
+        break;
+      }
+    }
+  });
+
+  // Update helper T cells (level 5 only): chase Bill, push on touch
+  helperTCells.forEach((t, i) => {
+    // Chase Bill
+    const dx = bill.x - t.x;
+    const dy = bill.y - t.y;
+    const d = Math.sqrt(dx*dx + dy*dy) || 1;
+    t.vx = (dx / d) * t.speed;
+    t.vy = (dy / d) * t.speed;
+
+    t.x += t.vx;
+    t.y += t.vy;
+    // Bounce off walls
+    if (t.x < 40 || t.x > W - 40) t.vx *= -1;
+    if (t.y < 40 || t.y > H - 40) t.vy *= -1;
+
+    // Touch Bill = death
+    if (dist(t, bill) < 32) {
+      deathCause = 'helperT';
+      handleDeath();
+    }
+  });
+
+  // Update cytotoxic T cells (level 5): fast zig-zag, ignores Bill, kills on touch
+  cytotoxicTCells.forEach((c, i) => {
+    // Zig-zag: base direction + perpendicular wobble
+    c.wobble += 0.2;
+    const perpX = -c.baseVy; // perpendicular to base direction
+    const perpY = c.baseVx;
+    const wobbleAmp = 0.6;
+    c.vx = c.baseVx + Math.sin(c.wobble) * perpX * wobbleAmp;
+    c.vy = c.baseVy + Math.sin(c.wobble) * perpY * wobbleAmp;
+
+    c.x += c.vx;
+    c.y += c.vy;
+
+    // Bounce off walls (flip direction)
+    if (c.x < 40 || c.x > W - 40) {
+      c.baseVx *= -1;
+      c.vx *= -1;
+    }
+    if (c.y < 40 || c.y > H - 40) {
+      c.baseVy *= -1;
+      c.vy *= -1;
+    }
+
+    // Touch Bill = death (ignores Bill otherwise)
+    if (dist(c, bill) < 20) {
+      deathCause = 'cytotoxicT';
+      handleDeath();
+    }
+  });
+
+  // Glycoproteins vs neutrophils (instant lyse, 8s respawn, no bonus)
+  for (let i = glycoproteins.length - 1; i >= 0; i--) {
+    let g = glycoproteins[i];
+    for (let j = neutrophils.length - 1; j >= 0; j--) {
+      let n = neutrophils[j];
+      if (dist(g, n) < 28) {
+        shotsHit++;
+        score += 5; // same as lysing a single fibroblast
+        playSound('explode');
+        spawnParticles(n.x, n.y, '#ffff88', 12);
+        neutrophils.splice(j, 1);
+        glycoproteins.splice(i, 1);
+        // Only respawn if that was the last neutrophil (no penalty for killing extras)
+        if (neutrophils.length === 0) {
+          neutrophilRespawnTimer = 480; // 8 seconds
+        }
+        break;
+      }
+    }
+  }
+
+  // Glycoproteins vs helper T cells (level 5)
+  for (let i = glycoproteins.length - 1; i >= 0; i--) {
+    let g = glycoproteins[i];
+    for (let j = helperTCells.length - 1; j >= 0; j--) {
+      let t = helperTCells[j];
+      if (dist(g, t) < 28) {
+        shotsHit++;
+        score += 5; // same as fibroblast
+        playSound('explode');
+        spawnParticles(t.x, t.y, '#a0f0e0', 12);
+        helperTCells.splice(j, 1);
+        glycoproteins.splice(i, 1);
+        helperTRespawnTimer = 180; // 3 seconds
+        break;
+      }
+    }
+  }
+
+  // Glycoproteins vs cytotoxic T cells (level 5): fast +10 points
+  for (let i = glycoproteins.length - 1; i >= 0; i--) {
+    let g = glycoproteins[i];
+    for (let j = cytotoxicTCells.length - 1; j >= 0; j--) {
+      let c = cytotoxicTCells[j];
+      if (dist(g, c) < 24) {
+        shotsHit++;
+        score += 10; // bonus for fast hard-to-hit enemy
+        playSound('explode');
+        spawnParticles(c.x, c.y, '#ff8800', 14);
+        cytotoxicTCells.splice(j, 1);
+        glycoproteins.splice(i, 1);
+        cytotoxicTRespawnTimer = (level === 6) ? 600 : 300; // 10s in level 6, 5s elsewhere
+        break;
+      }
+    }
+  }
+
+  // Glycoproteins vs NK Ninjas (level 8): kill + set respawn
+  for (let i = glycoproteins.length - 1; i >= 0; i--) {
+    let g = glycoproteins[i];
+    for (let j = naturalKillerNinjas.length - 1; j >= 0; j--) {
+      let n = naturalKillerNinjas[j];
+      if (dist(g, n) < 24) {
+        shotsHit++;
+        score += 12; // hard to hit, good points
+        playSound('explode');
+        spawnParticles(n.x, n.y, '#aa88ff', 16);
+        naturalKillerNinjas.splice(j, 1);
+        glycoproteins.splice(i, 1);
+        nkRespawnTimer = 480; // 8s respawn
+        break;
+      }
+    }
+  }
+
+  // Update basophils (level 6): drift, touch=death, close=triggers histamine cloud
+  for (let i = basophils.length - 1; i >= 0; i--) {
+    let b = basophils[i];
+    b.x += b.vx;
+    b.y += b.vy;
+    // Bounce off walls
+    if (b.x < 40 || b.x > W - 40) b.vx *= -1;
+    if (b.y < 40 || b.y > H - 40) b.vy *= -1;
+
+    // Touch Bill = death
+    if (dist(b, bill) < 36) {
+      deathCause = 'basophil';
+      handleDeath();
+      continue;
+    }
+
+    // Drift close to Bill = set off histamine cloud (basophil dies)
+    if (dist(b, bill) < 55) {
+      playSound('explode');
+      spawnParticles(b.x, b.y, '#b48cd9', 14);
+      histamineClouds.push({
+        x: b.x,
+        y: b.y,
+        radius: 150,
+        life: 300,
+        maxLife: 300
+      });
+      basophils.splice(i, 1);
+      basophilRespawnTimer = 480;
+    }
+  }
+
+  // Glycoproteins vs basophils (level 6): kill + release histamine cloud
+  for (let i = glycoproteins.length - 1; i >= 0; i--) {
+    let g = glycoproteins[i];
+    for (let j = basophils.length - 1; j >= 0; j--) {
+      let b = basophils[j];
+      if (dist(g, b) < 32) {
+        shotsHit++;
+        score += 5;
+        playSound('explode');
+        spawnParticles(b.x, b.y, '#b48cd9', 14);
+        // Spawn histamine cloud (big, transient, 5s)
+        histamineClouds.push({
+          x: b.x,
+          y: b.y,
+          radius: 150,
+          life: 300, // 5 seconds at 60fps
+          maxLife: 300
+        });
+        basophils.splice(j, 1);
+        glycoproteins.splice(i, 1);
+        basophilRespawnTimer = 480; // 8 seconds
+        break;
+      }
+    }
+  }
+
+  // Glycoproteins vs cytokines (level 7): destroy cytokine, no death for cell
+  for (let i = glycoproteins.length - 1; i >= 0; i--) {
+    let g = glycoproteins[i];
+    for (let di = 0; di < dendriticCells.length; di++) {
+      let d = dendriticCells[di];
+      for (let j = d.cytokines.length - 1; j >= 0; j--) {
+        let c = d.cytokines[j];
+        if (dist(g, c) < 20) {
+          shotsHit++;
+          score += 3;
+          playSound('lyse');
+          spawnParticles(c.x, c.y, '#ffaa00', 8);
+          d.cytokines.splice(j, 1);
+          glycoproteins.splice(i, 1);
+          break;
+        }
+      }
+      if (glycoproteins.length <= i || !glycoproteins[i]) break; // already spliced
+    }
+  }
+
+  // Glycoproteins vs dendritic cells (level 7): make them angry for 5s (immortal, just cosmetic)
+  for (let i = glycoproteins.length - 1; i >= 0; i--) {
+    let g = glycoproteins[i];
+    for (let j = dendriticCells.length - 1; j >= 0; j--) {
+      let d = dendriticCells[j];
+      if (dist(g, d) < 144) { // same hitbox as touch (3x bigger)
+        shotsHit++;
+        score += 10;
+        playSound('growl'); // deep angry growl!
+        spawnParticles(d.x, d.y, '#ff3300', 12);
+        d.angryTimer = 300; // 5 seconds angry
+        // Launch straight at where Bill was when shot (4x speed)
+        const dx = bill.x - d.x;
+        const dy = bill.y - d.y;
+        const mag = Math.hypot(dx, dy) || 1;
+        d.baseVx = (dx / mag) * 0.3;
+        d.baseVy = (dy / mag) * 0.3;
+        glycoproteins.splice(i, 1);
+        break;
+      }
+    }
+  }
+
+  // Update histamine clouds (fade over 5s; Bill frozen while inside, unfreezes when cloud gone)
+  for (let i = histamineClouds.length - 1; i >= 0; i--) {
+    let h = histamineClouds[i];
+    h.life--;
+    if (h.life <= 0) {
+      histamineClouds.splice(i, 1);
+      continue;
+    }
+    // Freeze Bill if inside this cloud
+    if (dist(h, bill) < h.radius) {
+      bill.frozenTimer = 300; // 5 seconds at 60fps
+    }
+  }
+
+  // Update dendritic cells (level 7): wander, place cytokines, immortal
+  for (let i = dendriticCells.length - 1; i >= 0; i--) {
+    let d = dendriticCells[i];
+    // Level 7: start moving after 1 second
+    if (level === 7 && elapsed >= 1000 && d.baseVx === 0) {
+      d.baseVx = rand(-0.3, 0.3);
+      d.baseVy = rand(-0.3, 0.3);
+    }
+    // Speed up when angry (4x), slow down when calm
+    const speedMult = d.angryTimer > 0 ? 4 : 1;
+    d.vx = d.baseVx * speedMult;
+    d.vy = d.baseVy * speedMult;
+    d.x += d.vx;
+    d.y += d.vy;
+    // Bounce off walls (flip base direction so it persists through speed changes)
+    if (d.x < 80 || d.x > W - 80) d.baseVx *= -1;
+    if (d.y < 80 || d.y > H - 80) d.baseVy *= -1;
+
+    // Touch Bill = death (hitbox 3x with visual)
+    if (dist(d, bill) < 144) {
+      deathCause = 'dendritic';
+      handleDeath();
+      continue;
+    }
+
+    // Touch cytokine = death
+    for (let c of d.cytokines) {
+      if (dist(c, bill) < 20) {
+        deathCause = 'dendritic';
+        handleDeath();
+        break;
+      }
+    }
+
+    // Place cytokine every ~6-8s (360-480 frames) if under cap
+    d.cytokineTimer--;
+    const cytokineMax = elapsed < 30000 ? 4 : (elapsed < 45000 ? 5 : 6);
+    if (d.cytokineTimer <= 0 && d.cytokines.length < cytokineMax) {
+      // Place near the dendritic cell, slightly toward Bill
+      const towardBill = Math.atan2(bill.y - d.y, bill.x - d.x);
+      const spread = rand(-0.5, 0.5);
+      const px = d.x + Math.cos(towardBill + spread) * rand(60, 100);
+      const py = d.y + Math.sin(towardBill + spread) * rand(60, 100);
+      d.cytokines.push({
+        x: Math.max(40, Math.min(W-40, px)),
+        y: Math.max(40, Math.min(H-40, py)),
+        life: 600 + rand(0, 120) // ~10-12s
+      });
+      d.cytokineTimer = 360 + rand(0, 120); // 6-8s until next
+    }
+
+    // Decay cytokines
+    for (let j = d.cytokines.length - 1; j >= 0; j--) {
+      d.cytokines[j].life--;
+      if (d.cytokines[j].life <= 0) {
+        d.cytokines.splice(j, 1);
+      }
+    }
+
+    // Decrement angry timer (5s = 300 frames)
+    if (d.angryTimer > 0) d.angryTimer--;
+  }
+
+  // ===== Level 8: Natural Killer Ninjas =====
+  if (level === 8) {
+    // Debug: log ninja count every second
+    if (time % 60 === 0) console.log('L8 t=' + time + ' left=' + secondsLeft + ' ninjas=' + naturalKillerNinjas.length);
+    // Scheduled spawns tied to countdown: at 55s, 40s, 30s, 20s remaining
+    if (secondsLeft <= 55 && naturalKillerNinjas.length < 1) naturalKillerNinjas.push(createNaturalKiller());
+    if (secondsLeft <= 40 && naturalKillerNinjas.length < 2) naturalKillerNinjas.push(createNaturalKiller());
+    if (secondsLeft <= 30 && naturalKillerNinjas.length < 3) naturalKillerNinjas.push(createNaturalKiller());
+    if (secondsLeft <= 20 && naturalKillerNinjas.length < 4) naturalKillerNinjas.push(createNaturalKiller());
+    // Update ninjas
+    for (let i = naturalKillerNinjas.length - 1; i >= 0; i--) {
+      let n = naturalKillerNinjas[i];
+      // Chase Bill
+      const dx = bill.x - n.x;
+      const dy = bill.y - n.y;
+      const d = Math.hypot(dx, dy) || 1;
+      n.vx = (dx / d) * n.speed;
+      n.vy = (dy / d) * n.speed;
+      n.x += n.vx;
+      n.y += n.vy;
+      // Bounce off walls
+      if (n.x < 40 || n.x > W - 40) n.vx *= -1;
+      if (n.y < 40 || n.y > H - 40) n.vy *= -1;
+      // Touch Bill = death
+      if (dist(n, bill) < 28) {
+        deathCause = 'cytotoxicT'; // reuse destroyed sprite
+        handleDeath();
+        continue;
+      }
+      // Blink dodge: if glycoprotein close, teleport randomly
+      if (n.blinkCooldown <= 0) {
+        for (let g of glycoproteins) {
+          if (dist(n, g) < 50) {
+            // Blink in random direction
+            const angle = Math.random() * Math.PI * 2;
+            n.x += Math.cos(angle) * 40;
+            n.y += Math.sin(angle) * 40;
+            n.x = Math.max(40, Math.min(W - 40, n.x));
+            n.y = Math.max(40, Math.min(H - 40, n.y));
+            n.blinkCooldown = 90; // ~1.5s cooldown
+            break;
+          }
+        }
+      }
+      if (n.blinkCooldown > 0) n.blinkCooldown--;
+      // Dramatic teleport every 10 seconds (600 frames)
+      n.teleportTimer--;
+      if (n.teleportTimer <= 0) {
+        // Teleport to random location on screen
+        n.x = rand(60, W - 60);
+        n.y = rand(60, H - 60);
+        n.teleportTimer = 600; // reset 10s timer
+        // Small particle burst at new location
+        spawnParticles(n.x, n.y, '#aa88ff', 10);
+      }
+    }
+    // Respawn ninja after 8 seconds if any died
+    if (nkRespawnTimer > 0) {
+      nkRespawnTimer--;
+      if (nkRespawnTimer === 0 && naturalKillerNinjas.length < 4) {
+        naturalKillerNinjas.push(createNaturalKiller());
+      }
+    }
+  }
+
+  // ===== Level 9: Myeloid Progenitor + Monocytes =====
+  if (level === 9 && progenitor) {
+    progenitor.pulse = (progenitor.pulse + 0.1) % (Math.PI * 2);
+    // Slow drift toward Bill (like helper T cells, speed ~0.35)
+    const chaseDx = bill.x - progenitor.x;
+    const chaseDy = bill.y - progenitor.y;
+    const chaseD = Math.hypot(chaseDx, chaseDy) || 1;
+    progenitor.vx = (chaseDx / chaseD) * 0.35;
+    progenitor.vy = (chaseDy / chaseD) * 0.35;
+    progenitor.x += progenitor.vx;
+    progenitor.y += progenitor.vy;
+    // Bounce off walls
+    if (progenitor.x < 80 || progenitor.x > W - 80) progenitor.vx *= -1;
+    if (progenitor.y < 80 || progenitor.y > H - 80) progenitor.vy *= -1;
+    // Spawn new monocyte periodically (every ~8s) until armor full
+    progenitorSpawnTimer++;
+    if (progenitorSpawnTimer > 480 && progenitor.armor < progenitor.maxArmor) {
+      progenitorSpawnTimer = 0;
+      // Spawn one new monocyte at random elliptical orbit
+      const a = Math.random() * Math.PI * 2;
+      const rx = 180 + Math.floor(Math.random() * 3) * 40; // 180, 220, 260
+      const ry = 160 + Math.floor(Math.random() * 3) * 35; // 160, 195, 230
+      monocytes.push({ x: progenitor.x + Math.cos(a)*rx, y: progenitor.y + Math.sin(a)*ry, vx: 0, vy: 0, orbitRx: rx, orbitRy: ry, phase: a });
+      progenitor.armor = Math.min(progenitor.maxArmor, progenitor.armor + 1);
+    }
+    // Update monocytes — simple elliptical orbit around progenitor
+    for (let i = monocytes.length - 1; i >= 0; i--) {
+      let m = monocytes[i];
+      const rx = m.orbitRx || 90;
+      const ry = m.orbitRy || 90;
+      // Compute target point on ellipse around progenitor
+      const angle = m.phase + (Date.now() / 500); // slow rotation
+      const targetX = progenitor.x + Math.cos(angle) * rx;
+      const targetY = progenitor.y + Math.sin(angle) * ry;
+      // Spring toward elliptical target
+      const dx = targetX - m.x;
+      const dy = targetY - m.y;
+      const d = Math.hypot(dx, dy) || 1;
+      m.vx = dx / d * 1.2;
+      m.vy = dy / d * 1.2;
+      m.x += m.vx;
+      m.y += m.vy;
+      // Collision with progenitor — push out so they don't overlap
+      const pdx = m.x - progenitor.x;
+      const pdy = m.y - progenitor.y;
+      const pd = Math.hypot(pdx, pdy) || 1;
+      const minDist = progenitor.r + 22;
+      if (pd < minDist) {
+        const push = (minDist - pd) * 0.5;
+        m.x += (pdx / pd) * push;
+        m.y += (pdy / pd) * push;
+      }
+      // Bounce off walls + clamp
+      if (m.x < 40 || m.x > W - 40 || m.y < 40 || m.y > H - 40) {
+        m.x = Math.max(40, Math.min(W - 40, m.x));
+        m.y = Math.max(40, Math.min(H - 40, m.y));
+      }
+      // Touch Bill = death
+      if (dist(m, bill) < 28) {
+        deathCause = 'neutrophil';
+        handleDeath();
+        continue;
+      }
+      // Kill by glycoprotein
+      for (let j = glycoproteins.length - 1; j >= 0; j--) {
+        if (dist(m, glycoproteins[j]) < 22) {
+          glycoproteins.splice(j, 1);
+          monocytes.splice(i, 1);
+          progenitor.armor = Math.max(0, progenitor.armor - 1);
+          spawnParticles(m.x, m.y, '#a8b4c8', 8);
+          break;
+        }
+      }
+    }
+    // Bill touches progenitor = death
+    if (dist(bill, progenitor) < progenitor.r + 20) {
+      deathCause = 'neutrophil';
+      handleDeath();
+    }
+    // Glycoprotein hits on vulnerable progenitor
+    if (progenitor.armor <= 0) {
+      for (let j = glycoproteins.length - 1; j >= 0; j--) {
+        if (dist(progenitor, glycoproteins[j]) < progenitor.r) {
+          glycoproteins.splice(j, 1);
+          // Progenitor takes damage (armor already 0, so this "kills" it)
+          progenitor.armor = -1; // mark dead
+          spawnParticles(progenitor.x, progenitor.y, '#8b5e3c', 20);
+          break;
+        }
+      }
+    }
+    // If progenitor dead, scatter monocytes
+    if (progenitor.armor < 0) {
+      monocytes.forEach(m => {
+        const dx = bill.x - m.x;
+        const dy = bill.y - m.y;
+        const d = Math.hypot(dx, dy) || 1;
+        m.vx = (dx / d) * 2.0;
+        m.vy = (dy / d) * 2.0;
+      });
+      progenitor = null;
+    }
+  }
+
+  // Respawn neutrophil after 8 seconds
+  if (neutrophilRespawnTimer > 0) {
+    neutrophilRespawnTimer--;
+    if (neutrophilRespawnTimer === 0) {
+      if (level === 4) {
+        neutrophils.push(createNeutrophil());
+      }
+    }
+  }
+
+  // Respawn helper T after 3 seconds (level 5 only)
+  if (helperTRespawnTimer > 0) {
+    helperTRespawnTimer--;
+    if (helperTRespawnTimer === 0) {
+      if (level === 5) {
+        helperTCells.push(createHelperTCell());
+      }
+    }
+  }
+
+  // Respawn cytotoxic T (level 5: 5s, level 6: 10s)
+  if (cytotoxicTRespawnTimer > 0) {
+    cytotoxicTRespawnTimer--;
+    if (cytotoxicTRespawnTimer === 0) {
+      if (level === 5 || level === 6) {
+        cytotoxicTCells.push(createCytotoxicTCell());
+        cytotoxicTRespawnTimer = (level === 6) ? 600 : 300;
+      }
+    }
+  }
+
+  // Respawn basophil after 8 seconds (level 6 only)
+  if (basophilRespawnTimer > 0) {
+    basophilRespawnTimer--;
+    if (basophilRespawnTimer === 0) {
+      if (level === 6) {
+        basophils.push(createBasophil());
+      }
+    }
+  }
+
+  // Respawn B cell after 8 seconds (with fresh speed timer)
+  if (bcellRespawnTimer > 0) {
+    bcellRespawnTimer--;
+    if (bcellRespawnTimer === 0) {
+      const bcellCount = level === 3 ? 0 : Math.max(0, level - 1);
+      if (bcells.length < bcellCount) {
+        bcells.push(createBCell()); // shootTimer=300, spawnSecondsLeft = now
+        playSound('ding'); // ding when B cell respawns
+      }
+    }
+  }
+
+  // Level 3: spawn new eosinophil every 7 seconds until 10 total
+  if (level === 3 && time > 0 && time % 420 === 0 && eosinophils.length < 10) {
+    eosinophils.push(createEosinophil());
+  }
+
+  // Update antibodies
+  for (let i = antibodies.length - 1; i >= 0; i--) {
+    let a = antibodies[i];
+    if (a.stuck) continue;
+    a.x += a.vx;
+    a.y += a.vy;
+
+    // Out of bounds
+    if (a.x < 0 || a.x > W || a.y < 0 || a.y > H) {
+      antibodies.splice(i, 1);
+      continue;
+    }
+
+    // Hit Bill?
+    if (dist(a, bill) < 28) {
+      a.stuck = true;
+      a.vx = 0;
+      a.vy = 0;
+      stuckAntibodies++;
+      playSound('ow');
+      // 5 stuck antibodies = death
+      if (stuckAntibodies >= 5) {
+        deathCause = 'bcell';
+        handleDeath();
+      }
+      // Keep in array (stuck to Bill, drawn separately)
+    }
+  }
+
+  // DNA collection
+  for (let i = dna.length - 1; i >= 0; i--) {
+    let d = dna[i];
+    if (dist(d, bill) < 25) {
+      dna.splice(i, 1);
+      dnaCount++;
+      score += 50; // DNA gives points
+      playSound('beep'); // happy beep for DNA collect!
+      spawnParticles(d.x, d.y, '#a5f3fc', 6);
+      if (dnaCount >= 10) {
+        lives++;
+        dnaCount = 0;
+        // Update lives UI
+        livesEl.innerHTML = '';
+        for (let k = 0; k < lives; k++) {
+          const img = document.createElement('img');
+          img.src = 'bill.svg';
+          img.style.width = '40px';
+          img.style.height = '40px';
+          livesEl.appendChild(img);
+        }
+      }
+    }
+  }
+
+  // Update glycoproteins
+  for (let i = glycoproteins.length - 1; i >= 0; i--) {
+    let g = glycoproteins[i];
+    g.x += g.vx;
+    g.y += g.vy;
+    if (g.x < 0 || g.x > W || g.y < 0 || g.y > H) {
+      glycoproteins.splice(i, 1);
+      continue;
+    }
+    // Hit fibroblast?
+    for (let j = fibroblasts.length - 1; j >= 0; j--) {
+      let f = fibroblasts[j];
+      if (dist(g, f) < 24) {
+        if (!f.infected) {
+          f.infected = true;
+          f.infectTime = 0;
+          fibroblastsInfected++;
+          shotsHit++;
+          playSound('infect');
+          spawnParticles(f.x, f.y, '#88ff88', 6);
+        } else {
+          shotsHit++;
+          // Already infected — lysis on hit (small steady score)
+          score += 5;
+          spawnParticles(f.x, f.y, '#ffaa00', 10);
+          playSound('lyse');
+          // Small chance to drop DNA
+          if (Math.random() < 0.12) {
+            dna.push({ x: f.x, y: f.y, vx: rand(-0.4, 0.4), vy: rand(-0.4, 0.4) });
+          }
+          fibroblasts.splice(j, 1);
+          uiScore.textContent = score;
+        }
+        glycoproteins.splice(i, 1);
+        break;
+      }
+    }
+  }
+
+  // Glycoproteins vs macrophages
+  for (let i = glycoproteins.length - 1; i >= 0; i--) {
+    let g = glycoproteins[i];
+    for (let j = macrophages.length - 1; j >= 0; j--) {
+      let m = macrophages[j];
+      if (dist(g, m) < 18) {
+        shotsHit++;
+        macrophagesDestroyed++;
+        playSound('explode');
+        playSound('macroOw'); // macrophage literally says "ow!" (funny)
+        spawnParticles(m.x, m.y, '#ff4444', 20);
+        // Burst into 4 new macrophages (big penalty!) — but NOT if crown powerup or chain glycoprotein
+        if (!g.chain && crownTimer <= 0) {
+          for (let k = 0; k < 4; k++) {
+            let offsetX = (Math.random() - 0.5) * 40;
+            let offsetY = (Math.random() - 0.5) * 40;
+            macrophages.push(createMacrophage(m.x + offsetX, m.y + offsetY));
+          }
+        }
+        macrophages.splice(j, 1);
+        glycoproteins.splice(i, 1);
+        break;
+      }
+    }
+  }
+
+  // Glycoproteins vs fibroblasts (Going Viral: lyse only, no chain)
+  for (let i = glycoproteins.length - 1; i >= 0; i--) {
+    let g = glycoproteins[i];
+    for (let j = fibroblasts.length - 1; j >= 0; j--) {
+      let f = fibroblasts[j];
+      if (dist(g, f) < 20) {
+        // Lyse the fibroblast (same as normal lysis)
+        spawnParticles(f.x, f.y, '#88ff88', 8);
+        if (Math.random() < 0.12) {
+          dna.push({ x: f.x, y: f.y, vx: rand(-0.4, 0.4), vy: rand(-0.4, 0.4) });
+        }
+        fibroblasts.splice(j, 1);
+        glycoproteins.splice(i, 1);
+        break;
+      }
+    }
+  }
+
+  // Update Going Viral darts: each flies to closest fibroblast and kills it
+  for (let i = darts.length - 1; i >= 0; i--) {
+    let d = darts[i];
+    // Find closest fibroblast
+    let closest = null;
+    let closestDist = Infinity;
+    for (let f of fibroblasts) {
+      const d2 = dist(d, f);
+      if (d2 < closestDist) {
+        closestDist = d2;
+        closest = f;
+      }
+    }
+    if (!closest) {
+      // No targets left — remove dart
+      darts.splice(i, 1);
+      continue;
+    }
+    // Move toward closest
+    const speed = 5;
+    const dx = closest.x - d.x;
+    const dy = closest.y - d.y;
+    const len = Math.hypot(dx, dy) || 1;
+    d.x += (dx / len) * speed;
+    d.y += (dy / len) * speed;
+    // Kill on close contact
+    if (closestDist < 18) {
+      spawnParticles(closest.x, closest.y, '#88ff88', 8);
+      if (Math.random() < 0.12) {
+        dna.push({ x: closest.x, y: closest.y, vx: rand(-0.4, 0.4), vy: rand(-0.4, 0.4) });
+      }
+      fibroblasts.splice(fibroblasts.indexOf(closest), 1);
+      darts.splice(i, 1);
+    }
+  }
+
+  // Glycoproteins vs eosinophils (killable, 100 pts)
+  for (let i = glycoproteins.length - 1; i >= 0; i--) {
+    let g = glycoproteins[i];
+    for (let j = eosinophils.length - 1; j >= 0; j--) {
+      let e = eosinophils[j];
+      if (dist(g, e) < 24) {
+        shotsHit++;
+        score += 100;
+        playSound('explode');
+        spawnParticles(e.x, e.y, '#ff99ff', 16);
+        eosinophils.splice(j, 1);
+        glycoproteins.splice(i, 1);
+        // Respawn after ~8 seconds
+        eosinRespawnTimer = 480;
+        uiScore.textContent = score;
+        break;
+      }
+    }
+  }
+
+  // Glycoproteins vs B Cells (killable, 100 pts)
+  for (let i = glycoproteins.length - 1; i >= 0; i--) {
+    let g = glycoproteins[i];
+    for (let j = bcells.length - 1; j >= 0; j--) {
+      let b = bcells[j];
+      if (dist(g, b) < 28) {
+        shotsHit++;
+        score += 100;
+        playSound('explode');
+        spawnParticles(b.x, b.y, '#aaccff', 16);
+        bcells.splice(j, 1);
+        glycoproteins.splice(i, 1);
+        bcellRespawnTimer = 480; // 8 seconds until respawn
+        uiScore.textContent = score;
+        break;
+      }
+    }
+  }
+
+  // Spawn a new macrophage every 5 seconds, capped at 5 natural spawns (none on level 3-7)
+  if (time > 0 && time % 300 === 0 && naturalSpawns < 5 && level !== 3 && level !== 4 && level !== 5 && level !== 6 && level !== 7 && level !== 8 && level !== 9) {
+    naturalSpawns++;
+    macrophages.push(createMacrophage());
+  }
+
+  // Update particles
+  for (let i = particles.length - 1; i >= 0; i--) {
+    let p = particles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.05; // slight gravity
+    p.life--;
+    if (p.life <= 0) particles.splice(i, 1);
+  }
+
+  // Level timer (real seconds) — skip for boss level
+  if (!gameOver && !levelComplete && level !== 10) {
+    timerEl.textContent = secondsLeft;
+    if (elapsed >= LEVEL_DURATION_MS) {
+      levelComplete = true;
+      showLevelSplash();
+    }
+  }
+
+  // ===== LEVEL 10: Hematopoietic Stem Cell boss =====
+  if (level === 10 && hscBoss) {
+    // Wander freely around the screen
+    hscBoss.x += hscBoss.vx;
+    hscBoss.y += hscBoss.vy;
+    // Bounce off bounds (keep in upper 70% of screen so it doesn't sit on Bill)
+    const margin = 120;
+    if (hscBoss.x < margin || hscBoss.x > W - margin) hscBoss.vx *= -1;
+    if (hscBoss.y < 80 || hscBoss.y > H * 0.7) hscBoss.vy *= -1;
+    // Clamp to safe bounds
+    hscBoss.x = Math.max(margin, Math.min(W - margin, hscBoss.x));
+    hscBoss.y = Math.max(80, Math.min(H * 0.7, hscBoss.y));
+    // Gentle random direction changes
+    if (Math.random() < 0.02) hscBoss.vx += rand(-0.3, 0.3);
+    if (Math.random() < 0.02) hscBoss.vy += rand(-0.2, 0.2);
+    // Cap speed
+    const maxSp = 2.2;
+    const sp = Math.hypot(hscBoss.vx, hscBoss.vy);
+    if (sp > maxSp) { hscBoss.vx = hscBoss.vx / sp * maxSp; hscBoss.vy = hscBoss.vy / sp * maxSp; }
+    hscBoss.pulse = Math.sin(time * 0.08) * 0.03 + 1;
+
+    // Phase transitions based on health
+    const hpPct = hscBoss.health / hscBoss.maxHealth;
+    if (hpPct <= 0.3 && hscBoss.phase < 3) {
+      hscBoss.phase = 3;
+    } else if (hpPct <= 0.6 && hscBoss.phase < 2) {
+      hscBoss.phase = 2;
+    }
+
+    // Spawn minions based on phase
+    hscBoss.spawnTimer--;
+    if (hscBoss.spawnTimer <= 0) {
+      const spawnCount = hscBoss.phase; // 1, 2, or 3 minions
+      for (let i = 0; i < spawnCount; i++) {
+        // Pick minion type by phase
+        const r = Math.random();
+        if (hscBoss.phase === 1) {
+          // Calm: eosinophils, neutrophils
+          if (r < 0.5) eosinophils.push(createEosinophil());
+          else neutrophils.push(createNeutrophil());
+        } else if (hscBoss.phase === 2) {
+          // Surge: cytotoxic T, helper T, basophils
+          if (r < 0.4) cytotoxicTCells.push(createCytotoxicTCell());
+          else if (r < 0.7) helperTCells.push(createHelperTCell());
+          else basophils.push(createBasophil());
+        } else {
+          // Desperation: all types
+          if (r < 0.25) cytotoxicTCells.push(createCytotoxicTCell());
+          else if (r < 0.45) helperTCells.push(createHelperTCell());
+          else if (r < 0.65) basophils.push(createBasophil());
+          else eosinophils.push(createEosinophil());
+        }
+      }
+      // Slower spawns per phase
+      hscBoss.spawnTimer = hscBoss.phase === 1 ? 420 : (hscBoss.phase === 2 ? 300 : 180);
+      // Chance to drop a crown power-up
+      if (Math.random() < 0.35) {
+        crowns.push({ x: hscBoss.x + rand(-40, 40), y: hscBoss.y + 60, vy: 0.8 + Math.random() * 0.4 });
+      }
+    }
+
+    // Glycoproteins vs HSC boss (damage)
+    for (let i = glycoproteins.length - 1; i >= 0; i--) {
+      const g = glycoproteins[i];
+      const dx = g.x - hscBoss.x;
+      const dy = g.y - hscBoss.y;
+      if (Math.hypot(dx, dy) < 100) {
+        // Hit the boss
+        shotsHit++;
+        score += 15;
+        spawnParticles(g.x, g.y, '#ff88ff', 10);
+        playSound('lyse');
+        const dmg = crownTimer > 0 ? 24 : 12;
+        hscBoss.health -= dmg;
+        glycoproteins.splice(i, 1);
+        // Recoil
+        hscBoss.x += (dx / Math.hypot(dx,dy) || 0) * 5;
+        break;
+      }
+    }
+
+    // Boss kills Bill on touch
+    if (dist(hscBoss, bill) < 80) {
+      deathCause = 'macrophage'; // reuse destroyed sprite
+      handleDeath();
+    }
+
+    // Boss dead → win cutscene!
+    if (hscBoss.health <= 0) {
+      hscBoss.health = 0;
+      // Trigger the epic cutscene
+      showCutscene();
+      return; // stop further updates
+    }
+  }
+
+  // Crown power-ups: float down, collect for 2x damage
+  for (let i = crowns.length - 1; i >= 0; i--) {
+    const c = crowns[i];
+    c.y += c.vy;
+    // Bobble a bit
+    c.x += Math.sin(time * 0.1 + i) * 0.3;
+    // Collect
+    if (dist(c, bill) < 30) {
+      crownTimer = 600; // 10 seconds
+      crowns.splice(i, 1);
+      playSound('win'); // reuse win sound as pickup jingle
+      continue;
+    }
+    // Off screen
+    if (c.y > H + 20) {
+      crowns.splice(i, 1);
+    }
+  }
+  // Countdown crown timer
+  if (crownTimer > 0) crownTimer--;
+
+  uiScore.textContent = score;
+  uiDna.textContent = dnaCount;
+  uiStuck.textContent = stuckAntibodies;
+  // Dashboard
+  document.getElementById('dbscore').textContent = score;
+  totalScoreEl.textContent = totalScore;
+  document.getElementById('dblives').innerHTML = '❤️'.repeat(lives);
+  document.getElementById('dbdna').textContent = dnaCount + '/10';
+  document.getElementById('dblevel').textContent = level;
+  document.getElementById('dashboardbill').src = bill.frozenTimer > 0 ? 'bill_scared.svg' : 'bill.svg';
+}
+
+function showLevelSplash() {
+  gameLoopRunning = false; // pause game while splash up
+  playSound('win');
+  totalScore += score; // add this level's score to running total
+  document.getElementById('leveltitle').textContent = `Level ${level} Complete!`;
+  nextLevelBtn.textContent = `Go to Level ${level + 1}`;
+
+  // Pick Bill face based on score
+  let faceFile;
+  if (score >= 3000) faceFile = 'bill_exalted.svg';
+  else if (score >= 2000) faceFile = 'bill_sassy.svg';
+  else if (score >= 1200) faceFile = 'bill.svg';
+  else if (score >= 700) faceFile = 'bill_frown.svg';
+  else if (score >= 300) faceFile = 'bill_sad.svg';
+  else faceFile = 'bill_angry.svg';
+
+  billFaceEl.innerHTML = `<img src="${faceFile}" style="width:100px;height:100px;">`;
+
+  // Compute accuracy
+  const acc = shotsFired > 0 ? Math.round(shotsHit / shotsFired * 100) : 0;
+
+  // Grade
+  let grade = 'F';
+  if (score >= 3000) grade = 'S';
+  else if (score >= 2000) grade = 'A';
+  else if (score >= 1200) grade = 'B';
+  else if (score >= 700) grade = 'C';
+  else if (score >= 300) grade = 'D';
+
+  statsEl.innerHTML =
+    `Score: <b>${score}</b><br>` +
+    `Total Score: <b>${totalScore}</b><br>` +
+    `Fibroblasts Infected: <b>${fibroblastsInfected}</b><br>` +
+    `Accuracy: <b>${acc}%</b><br>` +
+    `Grade: <b>${grade}</b>`;
+
+  levelSplash.style.display = 'block';
+}
+
+function draw() {
+  ctx.fillStyle = '#0a0a0a';
+  ctx.fillRect(0, 0, W, H);
+
+  // If on main menu, leave canvas blank (no game entities)
+  if (startSplash.style.display === 'block') return;
+
+  // Fibroblasts
+  fibroblasts.forEach(f => {
+    if (f.infected) {
+      // Pulsing infected fibroblast
+      const pulse = Math.sin(time * 0.15) * 4 + 50; // 46–54 px
+      ctx.save();
+      ctx.globalAlpha = 0.4 + Math.sin(time * 0.15) * 0.1;
+      ctx.fillStyle = '#ff4444';
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, pulse / 2 + 2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+      ctx.drawImage(fibroInfImg, f.x - pulse / 2, f.y - pulse / 2, pulse, pulse);
+    } else {
+      ctx.drawImage(fibroImg, f.x - 25, f.y - 25, 50, 50);
+    }
+  });
+
+  // Glycoproteins
+  ctx.fillStyle = '#ff88ff';
+  glycoproteins.forEach(g => {
+    ctx.beginPath();
+    ctx.arc(g.x, g.y, 4, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  // Macrophages (big)
+  macrophages.forEach(m => {
+    ctx.drawImage(macroImg, m.x - 30, m.y - 30, 60, 60);
+  });
+
+  // B Cells
+  bcells.forEach(b => {
+    ctx.drawImage(bcellImg, b.x - 28, b.y - 28, 56, 56);
+  });
+
+  // Eosinophils (pink with purple blobs)
+  eosinophils.forEach(e => {
+    ctx.drawImage(eosinImg, e.x - 28, e.y - 28, 56, 56);
+  });
+
+  // Neutrophils (level 4: yellow lumpy, purple blobs, bored eyes)
+  neutrophils.forEach(n => {
+    ctx.drawImage(neutrophilImg, n.x - 28, n.y - 28, 56, 56);
+  });
+
+  // Helper T cells (level 5: teal, gold star, smug)
+  helperTCells.forEach(t => {
+    ctx.drawImage(helperTImg, t.x - 28, t.y - 28, 56, 56);
+  });
+
+  // Cytotoxic T cells (level 5: small orange, determined eyes, zig-zag)
+  cytotoxicTCells.forEach(c => {
+    ctx.drawImage(cytotoxicTImg, c.x - 15, c.y - 15, 30, 30);
+  });
+
+  // Natural Killer Ninjas (level 8: dark, fast, blink dodge)
+  naturalKillerNinjas.forEach(n => {
+    ctx.drawImage(naturalKillerImg, n.x - 36, n.y - 36, 72, 72);
+  });
+
+  // Level 9: Myeloid Progenitor + Monocytes
+  if (level === 9 && progenitor) {
+    // Draw progenitor
+    const progScale = 1 + Math.sin(progenitor.pulse) * 0.05;
+    const progR = progenitor.r * progScale;
+    // Body
+    ctx.fillStyle = progenitor.armor <= 2 ? '#a66a4a' : (progenitor.armor <= 3 ? '#9e5a3a' : '#8b5e3c');
+    ctx.beginPath();
+    ctx.arc(progenitor.x, progenitor.y, progR, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#5c3f28';
+    ctx.lineWidth = 4;
+    ctx.stroke();
+    // Vulnerable indicator: pulsing red glow when armor <= 0
+    if (progenitor.armor <= 0) {
+      ctx.save();
+      const glowAlpha = 0.3 + Math.sin(time * 0.3) * 0.3;
+      ctx.strokeStyle = `rgba(255, 50, 50, ${glowAlpha})`;
+      ctx.lineWidth = 12;
+      ctx.beginPath();
+      ctx.arc(progenitor.x, progenitor.y, progR + 10, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
+    // Face (eyes, brows, mouth)
+    const fx = progenitor.x, fy = progenitor.y - 5;
+    // Eyes
+    ctx.fillStyle = '#fff';
+    ctx.strokeStyle = '#2a1f17';
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.ellipse(fx - 18, fy, 9, 6, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(fx + 18, fy, 9, 6, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    // Pupils
+    ctx.fillStyle = '#2a1f17';
+    ctx.beginPath(); ctx.arc(fx - 18, fy, 4, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(fx + 18, fy, 4, 0, Math.PI * 2); ctx.fill();
+    // Eye sparkles
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.arc(fx - 20, fy - 2, 1.5, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(fx + 16, fy - 2, 1.5, 0, Math.PI * 2); ctx.fill();
+    // Brows (slanted based on armor state)
+    ctx.strokeStyle = '#2a1f17';
+    ctx.lineWidth = 3;
+    if (progenitor.armor <= 2) {
+      // Scared: raised arcs
+      ctx.beginPath(); ctx.moveTo(fx - 30, fy - 12); ctx.quadraticCurveTo(fx - 18, fy - 18, fx - 8, fy - 11); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(fx + 8, fy - 11); ctx.quadraticCurveTo(fx + 18, fy - 18, fx + 30, fy - 12); ctx.stroke();
+    } else if (progenitor.armor <= 4) {
+      // Angry: slanted inward
+      ctx.beginPath(); ctx.moveTo(fx - 28, fy - 14); ctx.lineTo(fx - 8, fy - 9); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(fx + 8, fy - 9); ctx.lineTo(fx + 28, fy - 14); ctx.stroke();
+    } else {
+      // Normal: stern
+      ctx.beginPath(); ctx.moveTo(fx - 28, fy - 12); ctx.lineTo(fx - 8, fy - 9); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(fx + 8, fy - 9); ctx.lineTo(fx + 28, fy - 12); ctx.stroke();
+    }
+    // Mouth
+    ctx.beginPath();
+    if (progenitor.armor <= 2) {
+      ctx.ellipse(fx, fy + 16, 6, 4, 0, 0, Math.PI * 2); // open O mouth
+    } else if (progenitor.armor <= 4) {
+      ctx.moveTo(fx - 10, fy + 16); ctx.lineTo(fx + 10, fy + 16); ctx.moveTo(fx - 6, fy + 14); ctx.lineTo(fx - 6, fy + 18); ctx.moveTo(fx, fy + 14); ctx.lineTo(fx, fy + 18); ctx.moveTo(fx + 6, fy + 14); ctx.lineTo(fx + 6, fy + 18); // teeth grit
+    } else {
+      ctx.moveTo(fx - 10, fy + 14); ctx.quadraticCurveTo(fx, fy + 18, fx + 10, fy + 14); // slight frown
+    }
+    ctx.stroke();
+    // Draw bud spots (armor indicators)
+    for (let i = 0; i < progenitor.maxArmor; i++) {
+      const a = (i / progenitor.maxArmor) * Math.PI * 2;
+      const bx = progenitor.x + Math.cos(a) * (progR * 0.7);
+      const by = progenitor.y + Math.sin(a) * (progR * 0.7);
+      ctx.fillStyle = i < progenitor.armor ? '#e8b76a' : '#5c3f28';
+      ctx.beginPath();
+      ctx.arc(bx, by, 6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // Draw monocytes
+    monocytes.forEach(m => {
+      ctx.drawImage(monocyteImg, m.x - 28, m.y - 28, 56, 56);
+    });
+  }
+
+  // Basophils (level 6: sleepy purple blobby)
+  basophils.forEach(b => {
+    ctx.drawImage(basophilImg, b.x - 32, b.y - 32, 64, 64);
+  });
+
+  // Dendritic cells (level 7: big, spidery, immortal) + their cytokines — 3x bigger
+  dendriticCells.forEach(d => {
+    const img = d.angryTimer > 0 ? dendriticAngryImg : dendriticImg;
+    ctx.drawImage(img, d.x - 144, d.y - 144, 288, 288);
+    // Draw cytokines (small pulsing orbs)
+    d.cytokines.forEach(c => {
+      const alpha = c.life / 700; // fade as it decays
+      ctx.save();
+      ctx.globalAlpha = 0.6 + Math.sin(time * 0.2) * 0.2 * alpha;
+      const size = 84 * (c.life / 700) + 36; // shrink as it decays (3x bigger)
+      ctx.drawImage(cytokineImg, c.x - size/2, c.y - size/2, size, size);
+      ctx.restore();
+    });
+  });
+
+  // Histamine clouds (fading purple haze)
+  histamineClouds.forEach(h => {
+    const alpha = h.life / h.maxLife * 0.35;
+    ctx.fillStyle = `rgba(180, 140, 217, ${alpha})`;
+    ctx.beginPath();
+    ctx.arc(h.x, h.y, h.radius, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  // DNA collectables
+  dna.forEach(d => {
+    ctx.drawImage(dnaImg, d.x - 25, d.y - 25, 50, 50);
+  });
+
+  // Crown power-ups (Level 10)
+  crowns.forEach(c => {
+    ctx.save();
+    ctx.translate(c.x, c.y);
+    ctx.rotate(time * 0.05);
+    ctx.fillStyle = '#ffcc00';
+    ctx.strokeStyle = '#aa8800';
+    ctx.lineWidth = 3;
+    // Simple crown shape: 5-pointed
+    ctx.beginPath();
+    ctx.moveTo(-20, 10);
+    ctx.lineTo(-12, -18);
+    ctx.lineTo(0, 0);
+    ctx.lineTo(12, -18);
+    ctx.lineTo(20, 10);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    // Gems
+    ctx.fillStyle = '#ff66cc';
+    ctx.beginPath(); ctx.arc(0, -8, 5, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+  });
+
+  // Flying antibodies
+  antibodies.forEach(a => {
+    if (!a.stuck) {
+      ctx.save();
+      ctx.translate(a.x, a.y);
+      ctx.rotate(Math.atan2(a.vy, a.vx) + Math.PI / 2);
+      ctx.drawImage(abFlyingImg, -10, -10, 20, 20);
+      ctx.restore();
+    }
+  });
+
+  // Stuck antibodies around Bill
+  if (stuckAntibodies > 0) {
+    for (let i = 0; i < stuckAntibodies; i++) {
+      const angle = (i / stuckAntibodies) * Math.PI * 2 + time * 0.02;
+      const rx = Math.cos(angle) * 38;
+      const ry = Math.sin(angle) * 38;
+      ctx.drawImage(abStuckImg, bill.x + rx - 10, bill.y + ry - 10, 20, 20);
+    }
+  }
+
+  // Level 10: HSC boss
+  if (level === 10 && hscBoss) {
+    const b = hscBoss;
+    const pulse = b.pulse;
+    const hpPct = b.health / b.maxHealth;
+
+    // Shadow
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    ctx.beginPath();
+    ctx.ellipse(b.x, b.y + 100, 80 * pulse, 18, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Main blob (pale gray, pulsing)
+    ctx.fillStyle = hpPct > 0.6 ? '#e8e8f0' : (hpPct > 0.3 ? '#e0c0e8' : '#ffcccc');
+    ctx.strokeStyle = '#444';
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.ellipse(b.x, b.y, 110 * pulse, 90 * pulse, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    // Glossy highlight
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.beginPath();
+    ctx.ellipse(b.x - 30, b.y - 25, 35, 22, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Eyes (angry, pulsing)
+    const eyeOffset = Math.sin(time * 0.2) * 2;
+    ctx.fillStyle = '#fff';
+    ctx.strokeStyle = '#333';
+    ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.ellipse(b.x - 40, b.y - 15, 24, 26, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(b.x + 40, b.y - 15, 24, 26, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+
+    // Red irises
+    ctx.fillStyle = '#cc3333';
+    ctx.beginPath(); ctx.ellipse(b.x - 38 + eyeOffset, b.y - 12, 15, 16, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(b.x + 42 + eyeOffset, b.y - 12, 15, 16, 0, 0, Math.PI * 2); ctx.fill();
+
+    // Pupils
+    ctx.fillStyle = '#111';
+    ctx.beginPath(); ctx.ellipse(b.x - 36 + eyeOffset, b.y - 10, 8, 9, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(b.x + 44 + eyeOffset, b.y - 10, 8, 9, 0, 0, Math.PI * 2); ctx.fill();
+
+    // Eye highlights
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.arc(b.x - 45, b.y - 20, 6, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(b.x + 35, b.y - 20, 6, 0, Math.PI * 2); ctx.fill();
+
+    // Angry eyebrows
+    ctx.strokeStyle = '#222';
+    ctx.lineWidth = 10;
+    ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(b.x - 70, b.y - 45); ctx.quadraticCurveTo(b.x - 40, b.y - 58, b.x - 18, b.y - 42); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(b.x + 18, b.y - 42); ctx.quadraticCurveTo(b.x + 40, b.y - 58, b.x + 70, b.y - 45); ctx.stroke();
+
+    // Scowl mouth
+    ctx.strokeStyle = '#222';
+    ctx.lineWidth = 8;
+    ctx.beginPath(); ctx.moveTo(b.x - 40, b.y + 35); ctx.quadraticCurveTo(b.x, b.y + 52, b.x + 40, b.y + 35); ctx.stroke();
+
+    // Teeth
+    ctx.fillStyle = '#eee';
+    ctx.strokeStyle = '#444';
+    ctx.lineWidth = 1;
+    for (let i = -2; i <= 2; i++) {
+      ctx.fillRect(b.x + i * 16 - 4, b.y + 30, 8, 12);
+      ctx.strokeRect(b.x + i * 16 - 4, b.y + 30, 8, 12);
+    }
+
+    // Health bar
+    const barW = 400, barH = 20;
+    const barX = W/2 - barW/2;
+    const barY = 30;
+    // Background
+    ctx.fillStyle = '#222';
+    ctx.fillRect(barX, barY, barW, barH);
+    // Fill (gradient by phase)
+    let barColor = '#9966cc'; // purple
+    if (hscBoss.phase === 2) barColor = '#cc66cc'; // magenta
+    if (hscBoss.phase === 3) barColor = '#ff4444'; // red
+    ctx.fillStyle = barColor;
+    ctx.fillRect(barX, barY, barW * hpPct, barH);
+    // Border
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(barX, barY, barW, barH);
+    // Label
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`HSC • Phase ${hscBoss.phase}`, W/2, barY - 6);
+  }
+
+  // Bill (big) — crown sprite when power-up active
+  ctx.save();
+  ctx.translate(bill.x, bill.y);
+  ctx.rotate(bill.facing);
+  let billSprite = bill.smiling ? billImg : billSadImg;
+  if (crownTimer > 0) billSprite = billCrownImg;
+  ctx.drawImage(billSprite, -30, -30, 60, 60);
+  ctx.restore();
+
+  // Particles
+  particles.forEach(p => {
+    ctx.fillStyle = p.color;
+    ctx.globalAlpha = p.life / 40;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  // Going Viral darts
+  ctx.fillStyle = '#00ff88';
+  darts.forEach(d => {
+    ctx.beginPath();
+    ctx.arc(d.x, d.y, 4, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  // Going Viral text
+  if (goingViralTimer > 0) {
+    const alpha = goingViralTimer / 90;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = '#ffff66';
+    ctx.font = 'bold 48px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('GOING VIRAL', W / 2, 120);
+    ctx.restore();
+    goingViralTimer--;
+  }
+
+  ctx.globalAlpha = 1;
+}
+
+function loop() {
+  if (!gameLoopRunning) return; // splash screen up — game paused
+  update();
+  draw();
+  requestAnimationFrame(loop);
+}
+
+// ===== High Scores & Leaderboard =====
+const HIGH_SCORES_KEY = 'germy_highscores';
+const MAX_SCORES = 10;
+
+function getHighScores() {
+  try {
+    const raw = localStorage.getItem(HIGH_SCORES_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) { return []; }
+}
+
+function saveHighScore(name, score) {
+  const scores = getHighScores();
+  scores.push({ name: name || 'Anonymous', score: score, date: Date.now() });
+  scores.sort((a, b) => b.score - a.score);
+  const trimmed = scores.slice(0, MAX_SCORES);
+  localStorage.setItem(HIGH_SCORES_KEY, JSON.stringify(trimmed));
+  return trimmed;
+}
+
+function qualifiesForLeaderboard(score) {
+  const scores = getHighScores();
+  if (scores.length < MAX_SCORES) return true;
+  return score > scores[scores.length - 1].score;
+}
+
+// Leaderboard floating entities (just drift, no interaction)
+let lbEntities = [];
+let lbAnimFrame = null;
+
+function createLBEntity(type) {
+  const e = {
+    type,
+    x: Math.random() * W,
+    y: Math.random() * H,
+    vx: (Math.random() - 0.5) * 1.2,
+    vy: (Math.random() - 0.5) * 1.2
+  };
+  return e;
+}
+
+function initLBEntities() {
+  lbEntities = [];
+  const types = ['macrophage', 'bcell', 'eosinophil', 'neutrophil', 'helperT', 'basophil', 'cytotoxicT', 'fibro', 'bill'];
+  for (let i = 0; i < 18; i++) {
+    lbEntities.push(createLBEntity(types[i % types.length]));
+  }
+}
+
+function drawLBEntities() {
+  leaderboardCtx.clearRect(0, 0, W, H);
+  // Draw box area to mask (entities won't render inside it visually — we just avoid drawing there)
+  // Actually, we let them float anywhere but they look fine behind the scorebox overlay
+  const boxLeft = W/2 - 200, boxTop = H/2 - 130, boxW = 400, boxH = 260;
+
+  lbEntities.forEach(e => {
+    // Bounce off edges
+    e.x += e.vx;
+    e.y += e.vy;
+    if (e.x < 30 || e.x > W - 30) e.vx *= -1;
+    if (e.y < 30 || e.y > H - 30) e.vy *= -1;
+
+    // Skip drawing if inside the score box area (simple AABB)
+    if (e.x > boxLeft && e.x < boxLeft + boxW && e.y > boxTop && e.y < boxTop + boxH) {
+      // nudge out
+      e.x += (e.x < W/2 ? -1 : 1) * 2;
+      e.y += (e.y < H/2 ? -1 : 1) * 2;
+    }
+
+    leaderboardCtx.save();
+    if (e.type === 'macrophage') {
+      leaderboardCtx.drawImage(macroImg, e.x - 25, e.y - 25, 50, 50);
+    } else if (e.type === 'bcell') {
+      leaderboardCtx.drawImage(bcellImg, e.x - 22, e.y - 22, 44, 44);
+    } else if (e.type === 'eosinophil') {
+      leaderboardCtx.drawImage(eosinImg, e.x - 22, e.y - 22, 44, 44);
+    } else if (e.type === 'fibro') {
+      leaderboardCtx.drawImage(fibroImg, e.x - 20, e.y - 20, 40, 40);
+    } else if (e.type === 'bill') {
+      leaderboardCtx.drawImage(billImg, e.x - 20, e.y - 20, 40, 40);
+    } else if (e.type === 'neutrophil') {
+      leaderboardCtx.drawImage(neutrophilImg, e.x - 22, e.y - 22, 44, 44);
+    } else if (e.type === 'helperT') {
+      leaderboardCtx.drawImage(helperTImg, e.x - 22, e.y - 22, 44, 44);
+    } else if (e.type === 'basophil') {
+      leaderboardCtx.drawImage(basophilImg, e.x - 22, e.y - 22, 44, 44);
+    } else if (e.type === 'cytotoxicT') {
+      leaderboardCtx.drawImage(cytotoxicTImg, e.x - 15, e.y - 15, 30, 30);
+    }
+    leaderboardCtx.restore();
+  });
+}
+
+function lbLoop() {
+  drawLBEntities();
+  lbAnimFrame = requestAnimationFrame(lbLoop);
+}
+
+function showLeaderboard() {
+  gameLoopRunning = false; // pause game while splash up
+
+  // Resize leaderboard canvas to match
+  leaderboardCanvas.width = W;
+  leaderboardCanvas.height = H;
+
+  // Populate scores
+  const scores = getHighScores();
+  scoreList.innerHTML = '';
+  if (scores.length === 0) {
+    const li = document.createElement('li');
+    li.textContent = 'No scores yet — be the first!';
+    scoreList.appendChild(li);
+  } else {
+    scores.forEach(s => {
+      const li = document.createElement('li');
+      li.textContent = `${s.name} — ${s.score}`;
+      scoreList.appendChild(li);
+    });
+  }
+
+  // Hide other splashes, show leaderboard
+  startSplash.style.display = 'none';
+  gameOverEl.style.display = 'none';
+  youDiedEl.style.display = 'none';
+  levelSplash.style.display = 'none';
+  devLevels.style.display = 'none';
+  leaderboardSplash.style.display = 'block';
+
+  // Start floating entities
+  initLBEntities();
+  if (lbAnimFrame) cancelAnimationFrame(lbAnimFrame);
+  lbLoop();
+}
+
+function hideLeaderboard() {
+  leaderboardSplash.style.display = 'none';
+  if (lbAnimFrame) { cancelAnimationFrame(lbAnimFrame); lbAnimFrame = null; }
+  startSplash.style.display = 'block';
+}
+
+// Name entry for qualifying high scores
+let pendingScore = 0;
+function maybePromptNameEntry(finalScore) {
+  if (!qualifiesForLeaderboard(finalScore)) return;
+  pendingScore = finalScore;
+  // Create a simple overlay input
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:1000;';
+  const box = document.createElement('div');
+  box.style.cssText = 'background:#222;padding:30px 40px;border-radius:12px;text-align:center;color:#fff;';
+  box.innerHTML = `<h3 style="margin-bottom:10px;">New High Score!</h3><p style="margin-bottom:15px;">Your score: <b>${finalScore}</b></p>`;
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.placeholder = 'Enter your name';
+  input.style.cssText = 'padding:10px 14px;font-size:18px;border-radius:6px;border:none;margin-bottom:15px;width:220px;';
+  const saveBtn = document.createElement('button');
+  saveBtn.textContent = 'Save';
+  saveBtn.style.cssText = 'padding:10px 20px;font-size:16px;cursor:pointer;background:#448800;border:none;color:#fff;border-radius:6px;';
+  const skipBtn = document.createElement('button');
+  skipBtn.textContent = 'Skip';
+  skipBtn.style.cssText = 'padding:10px 20px;font-size:16px;cursor:pointer;background:#555;border:none;color:#fff;border-radius:6px;margin-left:10px;';
+
+  saveBtn.onclick = () => {
+    const name = input.value.trim().slice(0, 20) || 'Anonymous';
+    saveHighScore(name, finalScore);
+    document.body.removeChild(overlay);
+    showLeaderboard();
+  };
+  skipBtn.onclick = () => {
+    document.body.removeChild(overlay);
+  };
+  input.onkeydown = (e) => { if (e.key === 'Enter') saveBtn.click(); };
+
+  box.appendChild(input);
+  box.appendChild(document.createElement('br'));
+  box.appendChild(saveBtn);
+  box.appendChild(skipBtn);
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+  setTimeout(() => input.focus(), 50);
+}
+
+// Wire up buttons
+leaderboardBtn.addEventListener('click', () => {
+  showLeaderboard();
+});
+
+leaderBackBtn.addEventListener('click', () => {
+  hideLeaderboard();
+});
+
+// Art gallery
+const gameArtFiles = [
+  'bill.svg','bill_sad.svg','bill_angry.svg','bill_destroyed.svg','bill_exalted.svg','bill_helpert.svg',
+  'bill_frown.svg','bill_sassy.svg','bill_scared.svg','bill_stuck.svg',
+  'antibody.svg','antibody_flying.svg','antibody_stuck.svg',
+  'bcell.svg','bcell_active.svg','bcell_resting.svg',
+  'dna.svg','eosinophil.svg','neutrophil.svg','helper_t_cell.svg','cytotoxic_t_cell.svg','basophil.svg','nk2.svg','dendritic_cell.svg','dendritic_cell_angry.svg','myeloid_progenitor.svg','myeloid_progenitor_angry.svg','myeloid_progenitor_scared.svg','monocyte.svg',
+  'fibroblast.svg','fibroblast_infected.svg',
+  'macrophage.svg',
+  'dashboard_panel.svg'
+];
+
+function showArt() {
+  gameLoopRunning = false; // pause game while splash up
+  // Hide other splashes
+  startSplash.style.display = 'none';
+  devLevels.style.display = 'none';
+  leaderboardsplash.style.display = 'none';
+  artSplash.style.display = 'block';
+  // Populate grid
+  artGrid.innerHTML = '';
+  gameArtFiles.forEach(name => {
+    const wrap = document.createElement('div');
+    wrap.style.textAlign = 'center';
+    const img = document.createElement('img');
+    img.src = name;
+    img.style.width = '100px';
+    img.style.height = '100px';
+    img.style.objectFit = 'contain';
+    img.style.background = '#222';
+    img.style.borderRadius = '8px';
+    const label = document.createElement('div');
+    label.textContent = name;
+    label.style.fontSize = '11px';
+    label.style.color = '#888';
+    label.style.marginTop = '6px';
+    label.style.wordBreak = 'break-all';
+    wrap.appendChild(img);
+    wrap.appendChild(label);
+    artGrid.appendChild(wrap);
+  });
+}
+
+function hideArt() {
+  artSplash.style.display = 'none';
+  devLevels.style.display = 'block';
+}
+
+// Characters page
+function showCharacters() {
+  gameLoopRunning = false; // pause game while splash up
+  startSplash.style.display = 'none';
+  devLevels.style.display = 'none';
+  leaderboardsplash.style.display = 'none';
+  artSplash.style.display = 'none';
+  charSplash.style.display = 'block';
+  charGrid.innerHTML = '';
+  // Bill hero section (own section at top)
+  const billHero = document.createElement('div');
+  billHero.style.background = '#1a1a1a';
+  billHero.style.borderRadius = '16px';
+  billHero.style.padding = '30px';
+  billHero.style.textAlign = 'center';
+  billHero.style.marginBottom = '30px';
+  billHero.style.maxWidth = '600px';
+  billHero.style.marginLeft = 'auto';
+  billHero.style.marginRight = 'auto';
+  billHero.style.gridColumn = '1 / -1'; // full width
+  const billImgEl = document.createElement('img');
+  billImgEl.src = billImg.src;
+  billImgEl.style.width = '160px';
+  billImgEl.style.height = '160px';
+  billImgEl.style.display = 'block';
+  billImgEl.style.margin = '0 auto 20px';
+  const billTitle = document.createElement('h2');
+  billTitle.textContent = 'Bill: The Contagion';
+  billTitle.style.color = '#ffaa00';
+  billTitle.style.marginBottom = '15px';
+  const billDesc = document.createElement('p');
+  billDesc.textContent = 'This is Bill. Bill is a virus. Bill wants to take over the world. A scrappy little virus with big ambitions. Cocky when winning, panicked when overwhelmed.';
+  billDesc.style.fontSize = '16px';
+  billDesc.style.lineHeight = '1.7';
+  billDesc.style.color = '#ddd';
+  billDesc.style.margin = '0';
+  billHero.appendChild(billImgEl);
+  billHero.appendChild(billTitle);
+  billHero.appendChild(billDesc);
+  charGrid.appendChild(billHero);
+
+  // Immune System section heading
+  const immuneTitle = document.createElement('h2');
+  immuneTitle.textContent = '🦠 The Immune System';
+  immuneTitle.style.color = '#ffaa00';
+  immuneTitle.style.textAlign = 'center';
+  immuneTitle.style.margin = '40px 0 20px';
+  immuneTitle.style.fontSize = '28px';
+  immuneTitle.style.gridColumn = '1 / -1'; // full width
+  charGrid.appendChild(immuneTitle);
+
+  // Define immune cells (grid below)
+  const chars = [
+    {
+      img: macroImg,
+      name: 'Macrophage',
+      desc: 'Big and bulky, they wander the battlefield aimlessly. Dumb but dangerous — if they catch you, you\'re done. Shooting them only makes things worse.'
+    },
+    {
+      img: bcellImg,
+      name: 'B Cell',
+      desc: 'Patient and precise. They hang back and fire sticky antibodies at you. Get too many stuck and it\'s game over.'
+    },
+    {
+      img: eosinImg,
+      name: 'Eosinophil',
+      desc: 'The reluctant healer. They chase infected cells to cure them, but if you get in their way they\'ll eat you too.'
+    },
+    {
+      img: neutrophilImg,
+      name: 'Neutrophil',
+      desc: 'Slow and bored. They drift lazily but chase down fibroblasts to convert them. Get too close and they won\'t hesitate.'
+    },
+    {
+      img: helperTImg,
+      name: 'Helper T Cell',
+      desc: 'The smug teacher\'s pet. Chases you with a self-satisfied attitude. Thinks it\'s doing the immune system a favor.'
+    },
+    {
+      img: basophilImg,
+      name: 'Basophil',
+      desc: 'Sleepy and hungry. Drifts around the battlefield in a half-awake haze looking for a meal. Startle it and it belches out a freezing poison cloud — nobody\'s going anywhere until it settles back down.'
+    },
+    {
+      img: cytotoxicTImg,
+      name: 'Cytotoxic T Cell',
+      desc: 'Determined and laser-focused. It doesn\'t chase, it doesn\'t wander — it locks onto a path and nothing can break its concentration. Zig-zag, bounce, repeat. You\'ll be in its crosshairs eventually.'
+    },
+    {
+      img: dendriticImg,
+      name: 'Dendritic Cell',
+      desc: 'Patient trapper. Drifts slowly and seeds the battlefield with cytokine mines in your path. Can\'t be killed — just gets angry when shot. Touch a cytokine and it\'s over.'
+    },
+    {
+      img: naturalKillerImg,
+      name: 'Natural Killer Ninja',
+      desc: 'Stealthy assassin. Chases relentlessly but blinks away from shots. Teleports dramatically every 10 seconds. Cold, calculated, and hard to pin down.'
+    },
+    {
+      img: progenitorImg,
+      name: 'Myeloid Progenitor',
+      desc: 'The queen cell. Drifts slowly toward you while her monocytes orbit in protective ellipses. Touch either and you\'re done. When she falls, the guard scatters and attacks.'
+    },
+    {
+      img: hscMysteryImg,
+      name: 'Hematopoietic Stem Cell',
+      desc: 'Ancient throne. Massive boss at the top of the screen. Spawns waves of immune cells in escalating phases. Every hit makes it recoil. The source of it all.'
+    }
+  ];
+  chars.forEach(c => {
+    const card = document.createElement('div');
+    card.style.background = '#1a1a1a';
+    card.style.borderRadius = '12px';
+    card.style.padding = '20px';
+    card.style.textAlign = 'center';
+    const img = document.createElement('img');
+    img.src = c.img.src;
+    img.style.width = '120px';
+    img.style.height = '120px';
+    img.style.display = 'block';
+    img.style.margin = '0 auto 15px';
+    const title = document.createElement('h3');
+    title.textContent = c.name;
+    title.style.color = '#ffaa00';
+    title.style.marginBottom = '10px';
+    const p = document.createElement('p');
+    p.textContent = c.desc;
+    p.style.fontSize = '14px';
+    p.style.lineHeight = '1.6';
+    p.style.color = '#ccc';
+    p.style.margin = '0';
+    card.appendChild(img);
+    card.appendChild(title);
+    card.appendChild(p);
+    charGrid.appendChild(card);
+  });
+}
+function hideCharacters() {
+  charSplash.style.display = 'none';
+  startSplash.style.display = 'block';
+}
+
+// Game Start Splash (one-time intro after Start Game)
+function showGameStartSplash() {
+  gameLoopRunning = false; // pause game while splash up
+  startSplash.style.display = 'none';
+  devLevels.style.display = 'none';
+  leaderboardsplash.style.display = 'none';
+  artSplash.style.display = 'none';
+  charSplash.style.display = 'none';
+  gameStartSplash.style.display = 'block';
+}
+function hideGameStartSplash() {
+  gameStartSplash.style.display = 'none';
+}
+
+// Level Intro Splash (before each level)
+function showLevelIntroSplash(lvl) {
+  const d = levelIntroData[lvl];
+  if (!d) return;
+  gameLoopRunning = false; // pause game while splash up
+  levelIntroTitle.textContent = d.title;
+  levelIntroSubtitle.textContent = d.subtitle;
+  levelIntroBill.innerHTML = `<img src="${d.billImg}" style="width:100px;height:100px;">`;
+  levelIntroBlurb.textContent = d.blurb;
+  levelIntroEnemy.innerHTML = d.enemyHTML;
+  levelIntroKeyTip.textContent = d.keyTip;
+  // Hide all other splashes
+  startSplash.style.display = 'none';
+  devLevels.style.display = 'none';
+  leaderboardsplash.style.display = 'none';
+  artSplash.style.display = 'none';
+  charSplash.style.display = 'none';
+  gameStartSplash.style.display = 'none';
+  levelIntroSplash.style.display = 'block';
+}
+function hideLevelIntroSplash() {
+  levelIntroSplash.style.display = 'none';
+}
+
+// Game Start → Level 1 Intro
+gameStartBeginBtn.addEventListener('click', () => {
+  hideGameStartSplash();
+  showLevelIntroSplash(1);
+});
+
+// Level Intro Begin → start gameplay
+levelIntroBeginBtn.addEventListener('click', () => {
+  hideLevelIntroSplash();
+  reset(level > 1); // keep lives if continuing to next level, reset to 3 if level 1 fresh start
+  gameLoopRunning = true;
+  loop();
+});
+
+devArtBtn.addEventListener('click', () => {
+  showArt();
+});
+
+artBackBtn.addEventListener('click', () => {
+  hideArt();
+});
+
+charsBtn.addEventListener('click', () => {
+  showCharacters();
+});
+
+charBackBtn.addEventListener('click', () => {
+  hideCharacters();
+});
+
+// ==================== CUTSCENE ====================
+let cutsceneRunning = false;
+let cutscenePhase = 'approaching'; // approaching | absorbing | flash | reveal
+let cutsceneTime = 0;
+let cutsceneParticles = [];
+let cutsceneBillY = 0;
+let cutsceneBillX = 0;
+let cutsceneHscScale = 1;
+let cutsceneFlashAlpha = 0;
+let cutsceneRevealAlpha = 0;
+let cutsceneRevealScale = 0.5;
+let cutsceneAbsorbStart = 0; // frame when absorbing began (for spiral)
+let cutsceneApproachSpeed = 4; // px/frame, calculated in showCutscene for 3s approach
+
+function showCutscene() {
+  devLevels.style.display = 'none';
+  cutsceneSplash.style.display = 'block';
+  cutsceneCanvas.width = window.innerWidth;
+  cutsceneCanvas.height = window.innerHeight;
+  cutsceneRunning = true;
+  cutscenePhase = 'approaching';
+  cutsceneTime = 0;
+  cutsceneParticles = [];
+  cutsceneBillY = cutsceneCanvas.height - 80;
+  cutsceneHscScale = 1;
+  cutsceneFlashAlpha = 0;
+  cutsceneRevealAlpha = 0;
+  cutsceneRevealScale = 0.5;
+  cutsceneAbsorbStart = 0;
+  // Calculate approach speed for exactly 6 seconds (360 frames)
+  const approachEndY = 120 + 80; // hscY is 120
+  const approachDist = cutsceneBillY - approachEndY;
+  cutsceneApproachSpeed = approachDist / 360;
+  cutsceneLabel.textContent = 'THE FINAL BATTLE...';
+  playSound('growl'); // ominous start
+  requestAnimationFrame(cutsceneLoop);
+}
+
+function hideCutscene() {
+  cutsceneSplash.style.display = 'none';
+  cutsceneRunning = false;
+  startSplash.style.display = 'block';
+}
+
+function cutsceneLoop() {
+  if (!cutsceneRunning) return;
+  cutsceneTime++;
+
+  const W = cutsceneCanvas.width;
+  const H = cutsceneCanvas.height;
+  const ctx = cutsceneCtx;
+
+  // Clear
+  ctx.fillStyle = '#0a0a0a';
+  ctx.fillRect(0, 0, W, H);
+
+  // HSC position/size (used by both drawing and phase logic)
+  const hscX = W / 2;
+  const hscY = 120;
+  const hscW = 220 * cutsceneHscScale;
+  const hscH = 180 * cutsceneHscScale;
+
+  // Draw HSC boss at top (hide in reveal phase)
+  if (cutscenePhase !== 'reveal') {
+    const pulse = Math.sin(cutsceneTime * 0.08) * 0.03 + 1;
+
+    // Shadow
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    ctx.beginPath();
+    ctx.ellipse(hscX, hscY + hscH/2 + 30, hscW*0.45, 18, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Main blob (pale gray)
+    ctx.fillStyle = '#f0f0f2';
+    ctx.strokeStyle = '#555555';
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.ellipse(hscX, hscY, hscW/2 * pulse, hscH/2 * pulse, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    // Glossy highlight
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.beginPath();
+    ctx.ellipse(hscX - hscW*0.15, hscY - hscH*0.2, hscW*0.18, hscH*0.12, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Angry eyes
+    const eyeOffset = (cutscenePhase === 'absorbing') ? Math.sin(cutsceneTime * 0.3) * 3 : 0;
+    ctx.fillStyle = '#ffffff';
+    ctx.strokeStyle = '#333333';
+    ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.ellipse(hscX - 40, hscY - 10, 22, 24, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(hscX + 40, hscY - 10, 22, 24, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+
+    // Red irises
+    ctx.fillStyle = '#cc3333';
+    ctx.beginPath(); ctx.ellipse(hscX - 38 + eyeOffset, hscY - 8, 13, 14, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(hscX + 42 + eyeOffset, hscY - 8, 13, 14, 0, 0, Math.PI * 2); ctx.fill();
+
+    // Pupils
+    ctx.fillStyle = '#111111';
+    ctx.beginPath(); ctx.ellipse(hscX - 36 + eyeOffset, hscY - 6, 7, 8, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(hscX + 44 + eyeOffset, hscY - 6, 7, 8, 0, 0, Math.PI * 2); ctx.fill();
+
+    // Eye highlights
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath(); ctx.arc(hscX - 44, hscY - 16, 5, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(hscX + 36, hscY - 16, 5, 0, Math.PI * 2); ctx.fill();
+
+    // Angry eyebrows
+    ctx.strokeStyle = '#222222';
+    ctx.lineWidth = 10;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(hscX - 65, hscY - 40);
+    ctx.quadraticCurveTo(hscX - 40, hscY - 52, hscX - 18, hscY - 38);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(hscX + 18, hscY - 38);
+    ctx.quadraticCurveTo(hscX + 40, hscY - 52, hscX + 65, hscY - 40);
+    ctx.stroke();
+
+    // Scowl mouth
+    ctx.strokeStyle = '#222222';
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.moveTo(hscX - 35, hscY + 35);
+    ctx.quadraticCurveTo(hscX, hscY + 48, hscX + 35, hscY + 35);
+    ctx.stroke();
+
+    // Teeth
+    ctx.fillStyle = '#eeeeee';
+    ctx.strokeStyle = '#444444';
+    ctx.lineWidth = 1;
+    for (let i = -2; i <= 2; i++) {
+      ctx.fillRect(hscX + i * 14 - 3, hscY + 30, 6, 9);
+      ctx.strokeRect(hscX + i * 14 - 3, hscY + 30, 6, 9);
+    }
+
+    // Red fury dots
+    ctx.fillStyle = '#ff4444';
+    ctx.beginPath(); ctx.arc(hscX - 70, hscY - 25, 4, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(hscX + 70, hscY - 28, 3.5, 0, Math.PI * 2); ctx.fill();
+  }
+
+  // Phase logic
+  if (cutscenePhase === 'approaching') {
+    // Bill goes straight up toward HSC (3 seconds)
+    cutsceneBillX = W/2;
+    cutsceneBillY -= cutsceneApproachSpeed;
+    if (cutsceneBillY <= hscY + 80) {
+      cutscenePhase = 'absorbing';
+      cutsceneAbsorbStart = cutsceneTime;
+      cutsceneLabel.textContent = 'BILL IS ABSORBED...';
+      playSound('lyse'); // absorption slurpy sound
+    }
+    // Trail particles
+    if (cutsceneTime % 4 === 0) {
+      cutsceneParticles.push({ x: cutsceneBillX + (Math.random()-0.5)*20, y: cutsceneBillY + 40, vx: (Math.random()-0.5)*0.5, vy: Math.random()*1.5 + 0.5, life: 20, color: '#88ff88' });
+    }
+  } else if (cutscenePhase === 'absorbing') {
+    // Bill spirals into HSC like water down a drain (slow, 3 rotations over 10s)
+    cutsceneHscScale = Math.max(0.15, cutsceneHscScale - 0.0014); // shrinks over 10s
+    const spiralDuration = 600; // 10 seconds
+    const t = Math.min(1, (cutsceneTime - cutsceneAbsorbStart) / spiralDuration);
+    const radius = 70 * (1 - t);
+    const angle = t * (Math.PI * 2 * 3); // 3 slow rotations
+    cutsceneBillX = hscX + Math.cos(angle) * radius;
+    cutsceneBillY = hscY + Math.sin(angle) * radius;
+    // Keep label visible
+    if (cutsceneLabel.textContent === '') cutsceneLabel.textContent = 'BILL IS ABSORBED...';
+    // Drain particles
+    if (cutsceneTime % 2 === 0) {
+      cutsceneParticles.push({
+        x: cutsceneBillX + (Math.random()-0.5) * 20,
+        y: cutsceneBillY + (Math.random()-0.5) * 20,
+        vx: (Math.random()-0.5) * 3,
+        vy: (Math.random()-0.5) * 3,
+        life: 25,
+        color: ['#88aaff','#aaffff','#88ffdd'][Math.floor(Math.random()*3)]
+      });
+    }
+    if (t >= 1 || cutsceneHscScale <= 0.15) {
+      cutscenePhase = 'flash';
+      cutsceneFlashAlpha = 1;
+      cutsceneLabel.textContent = '';
+      playSound('explode'); // big POOF!
+    }
+  } else if (cutscenePhase === 'flash') {
+    cutsceneFlashAlpha -= 0.04;
+    if (cutsceneFlashAlpha <= 0) {
+      cutscenePhase = 'reveal';
+      cutsceneRevealAlpha = 0;
+      cutsceneRevealScale = 0.3;
+      cutsceneLabel.textContent = ''; // wait until image visible
+      playSound('win'); // triumphant fanfare!
+    }
+  } else if (cutscenePhase === 'reveal') {
+    cutsceneRevealAlpha = Math.min(1, cutsceneRevealAlpha + 0.015);
+    cutsceneRevealScale = Math.min(1, cutsceneRevealScale + 0.008);
+    if (cutsceneRevealAlpha > 0.35 && cutsceneLabel.textContent === '') {
+      cutsceneLabel.textContent = 'BILL ACHIEVES HIS DREAMS';
+    }
+    // Confetti particles
+    if (cutsceneTime % 3 === 0) {
+      cutsceneParticles.push({
+        x: Math.random() * W,
+        y: Math.random() * H * 0.5,
+        vx: (Math.random()-0.5) * 3,
+        vy: Math.random() * 2 + 1,
+        life: 60 + Math.random()*40,
+        color: ['#ffcc00','#ff66aa','#66ffcc','#aa66ff'][Math.floor(Math.random()*4)],
+        size: 4 + Math.random()*4
+      });
+    }
+  }
+
+  // Draw Bill (moving up / swirling)
+  if (cutscenePhase === 'approaching' || cutscenePhase === 'absorbing') {
+    ctx.save();
+    ctx.translate(cutsceneBillX || W/2, cutsceneBillY);
+    ctx.scale(1.2, 1.2);
+    ctx.drawImage(billImg, -40, -40, 80, 80);
+    ctx.restore();
+  }
+
+  // Draw particles
+  for (let i = cutsceneParticles.length - 1; i >= 0; i--) {
+    const p = cutsceneParticles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.life--;
+    p.vy += 0.05; // gravity-ish
+    if (p.life <= 0) { cutsceneParticles.splice(i, 1); continue; }
+    ctx.fillStyle = p.color;
+    ctx.globalAlpha = p.life / 50;
+    const sz = p.size || 4;
+    ctx.fillRect(p.x - sz/2, p.y - sz/2, sz, sz);
+  }
+  ctx.globalAlpha = 1;
+
+  // Flash overlay
+  if (cutsceneFlashAlpha > 0) {
+    ctx.fillStyle = `rgba(255,255,255,${cutsceneFlashAlpha})`;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  // Reveal image (Handsome Squidward transformation)
+  if (cutscenePhase === 'reveal' && cutsceneRevealAlpha > 0) {
+    ctx.save();
+    ctx.globalAlpha = cutsceneRevealAlpha;
+    // Preserve aspect ratio of the image
+    const natW = finalBillImg.naturalWidth || 420;
+    const natH = finalBillImg.naturalHeight || 420;
+    const scale = cutsceneRevealScale;
+    const imgW = natW * scale;
+    const imgH = natH * scale;
+    ctx.drawImage(finalBillImg, W/2 - imgW/2, H/2 - imgH/2, imgW, imgH);
+    ctx.restore();
+  }
+
+  requestAnimationFrame(cutsceneLoop);
+}
+
+devCutsceneBtn.addEventListener('click', () => {
+  showCutscene();
+});
+
+cutsceneBackBtn.addEventListener('click', () => {
+  hideCutscene();
+});
+
+// Game starts from the Start button on the splash screen
+
+</script>
+</body>
+</html>
+

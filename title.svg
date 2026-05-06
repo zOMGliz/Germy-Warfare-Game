@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288 144" width="288" height="144">
+  <defs>
+    <!-- Glow filters -->
+    <filter id="glow" x="-200%" y="-200%" width="400%" height="400%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3"/>
+    </filter>
+    <filter id="strongGlow" x="-200%" y="-200%" width="400%" height="400%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6"/>
+    </filter>
+    <!-- Biohazard gradient -->
+    <linearGradient id="bioGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff3333"/>
+      <stop offset="100%" stop-color="#990000"/>
+    </linearGradient>
+    <!-- Text gradient -->
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#cc66ff"/>
+      <stop offset="50%" stop-color="#9900ff"/>
+      <stop offset="100%" stop-color="#6600cc"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Dark background -->
+  <rect x="0" y="0" width="288" height="144" fill="#0a0a12"/>
+  
+  <!-- Subtle grid -->
+  <g opacity="0.08">
+    <line x1="0" y1="24" x2="288" y2="24" stroke="#444" stroke-width="1"/>
+    <line x1="0" y1="48" x2="288" y2="48" stroke="#444" stroke-width="1"/>
+    <line x1="0" y1="72" x2="288" y2="72" stroke="#444" stroke-width="1"/>
+    <line x1="0" y1="96" x2="288" y2="96" stroke="#444" stroke-width="1"/>
+    <line x1="0" y1="120" x2="288" y2="120" stroke="#444" stroke-width="1"/>
+  </g>
+
+  <!-- Biohazard symbol (left side) -->
+  <g transform="translate(42,72)">
+    <!-- Outer glow -->
+    <circle cx="0" cy="0" r="28" fill="none" stroke="#ff3333" stroke-width="6" opacity="0.4" filter="url(#strongGlow)"/>
+    <!-- Main circle -->
+    <circle cx="0" cy="0" r="24" fill="none" stroke="#ff3333" stroke-width="4"/>
+    <!-- Center dot -->
+    <circle cx="0" cy="0" r="6" fill="#ff3333"/>
+    
+    <!-- Three biohazard blades -->
+    <!-- Top blade -->
+    <g fill="url(#bioGrad)">
+      <path d="M-12,-20 Q0,-34 12,-20 Q4,-8 0,-16 Q-4,-8 -12,-20" stroke="#330000" stroke-width="1"/>
+    </g>
+    <!-- Bottom left blade -->
+    <g fill="url(#bioGrad)">
+      <path d="M-18,10 Q-28,22 -12,26 Q-10,16 -14,12" stroke="#330000" stroke-width="1"/>
+    </g>
+    <!-- Bottom right blade -->
+    <g fill="url(#bioGrad)">
+      <path d="M18,10 Q28,22 12,26 Q10,16 14,12" stroke="#330000" stroke-width="1"/>
+    </g>
+  </g>
+
+  <!-- Title text -->
+  <g filter="url(#glow)">
+    <!-- GERMY -->
+    <text x="96" y="48" font-family="Impact, sans-serif" font-size="38" font-weight="900" fill="url(#textGrad)" text-anchor="start" letter-spacing="2">GERMY</text>
+    <!-- WARFARE -->
+    <text x="96" y="92" font-family="Impact, sans-serif" font-size="38" font-weight="900" fill="#ff3333" text-anchor="start" letter-spacing="1">WARFARE</text>
+  </g>
+
+  <!-- Red accent underline / slash -->
+  <path d="M92 100 L210 100" stroke="#ff3333" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+  <path d="M92 102 L210 102" stroke="#cc0000" stroke-width="1" stroke-linecap="round"/>
+
+  <!-- Floating virus particles -->
+  <g fill="#cc66ff" opacity="0.6">
+    <circle cx="235" cy="32" r="4"/>
+    <circle cx="248" cy="28" r="2"/>
+    <circle cx="258" cy="38" r="3"/>
+  </g>
+  <g fill="#ff6666" opacity="0.6">
+    <circle cx="220" cy="82" r="3"/>
+    <circle cx="235" cy="88" r="2"/>
+    <circle cx="250" cy="75" r="4"/>
+  </g>
+
+  <!-- Subtle red vignette edges -->
+  <rect x="0" y="0" width="288" height="144" fill="none" stroke="#330000" stroke-width="8" opacity="0.3"/>
+</svg>

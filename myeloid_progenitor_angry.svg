@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <!-- Shadow -->
+  <ellipse cx="60" cy="102" rx="32" ry="8" fill="#000000" opacity="0.25"/>
+
+  <!-- Angry aura (light tan energy) -->
+  <g>
+    <!-- Outer pulsing aura ring -->
+    <circle cx="60" cy="54" r="44" fill="none" stroke="#d2b48c" stroke-width="6" opacity="0.35">
+      <animate attributeName="r" values="42;46;42" dur="1.4s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.25;0.45;0.25" dur="1.4s" repeatCount="indefinite"/>
+    </circle>
+    <!-- Radiating energy lines -->
+    <g stroke="#d2b48c" stroke-width="2" stroke-linecap="round" opacity="0.35">
+      <g>
+        <animate attributeName="opacity" values="0.25;0.5;0.25" dur="1.0s" repeatCount="indefinite"/>
+        <path d="M60 14 L60 8"/>
+        <path d="M60 100 L60 106"/>
+        <path d="M20 54 L14 54"/>
+        <path d="M106 54 L112 54"/>
+      </g>
+      <g>
+        <animate attributeName="opacity" values="0.35;0.6;0.35" dur="1.3s" repeatCount="indefinite"/>
+        <path d="M35 24 L30 18"/>
+        <path d="M85 24 L90 18"/>
+        <path d="M35 84 L30 90"/>
+        <path d="M85 84 L90 90"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- Main body (angry worried progenitor - damaged factory) -->
+  <g>
+    <!-- Core body - slightly redder under stress -->
+    <circle cx="60" cy="54" r="36" fill="#9e5a3a" stroke="#5c3f28" stroke-width="4"/>
+
+    <!-- Body highlight - tense -->
+    <circle cx="48" cy="40" r="14" fill="#c17a5a" opacity="0.4"/>
+
+    <!-- Stress cracks on body -->
+    <g stroke="#3d281b" stroke-width="2" stroke-linecap="round" opacity="0.7">
+      <path d="M38 32 Q45 26 52 31"/>
+      <path d="M68 29 Q74 34 80 28"/>
+      <path d="M34 58 Q39 65 45 60"/>
+      <path d="M74 62 Q80 68 86 60"/>
+    </g>
+
+    <!-- Pulsing texture bumps - more erratic -->
+    <g fill="#5a3d26" opacity="0.8">
+      <circle cx="44" cy="32" r="4">
+        <animate attributeName="r" values="4;4.8;4" dur="1.1s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="72" cy="38" r="3.5">
+        <animate attributeName="r" values="3.5;4.2;3.5" dur="0.9s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="38" cy="62" r="4.5">
+        <animate attributeName="r" values="4.5;5.2;4.5" dur="1.3s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="78" cy="68" r="3">
+        <animate attributeName="r" values="3;3.7;3" dur="1.0s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+
+    <!-- 6 Bud spots - some cracked/darkened (lost layers) -->
+    <!-- Assume 3 have died → 3 dark, 3 pulsing -->
+    <g stroke="#c98a3a" stroke-width="1.5">
+      <!-- Top - cracked/dark -->
+      <circle cx="60" cy="24" r="5" fill="#5c3f28"/>
+      <!-- Top-right - cracked/dark -->
+      <circle cx="82" cy="38" r="4.5" fill="#5c3f28"/>
+      <!-- Right - cracked/dark -->
+      <circle cx="88" cy="60" r="5" fill="#5c3f28"/>
+      <!-- Bottom - still alive -->
+      <circle cx="60" cy="84" r="4.5" fill="#e8b76a" stroke="#c98a3a">
+        <animate attributeName="fill" values="#e8b76a;#ffe08c;#e8b76a" dur="1.2s" repeatCount="indefinite"/>
+      </circle>
+      <!-- Bottom-left - still alive -->
+      <circle cx="38" cy="72" r="5" fill="#e8b76a" stroke="#c98a3a">
+        <animate attributeName="fill" values="#e8b76a;#ffe08c;#e8b76a" dur="1.5s" repeatCount="indefinite"/>
+      </circle>
+      <!-- Left - still alive -->
+      <circle cx="32" cy="46" r="4.5" fill="#e8b76a" stroke="#c98a3a">
+        <animate attributeName="fill" values="#e8b76a;#ffe08c;#e8b76a" dur="0.8s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+  </g>
+
+  <!-- Eyes - worried squint + angry glare -->
+  <!-- Left eye - squinting worried -->
+  <ellipse cx="48" cy="48" rx="7" ry="3.5" fill="#fff" stroke="#2a1f17" stroke-width="2"/>
+  <!-- Right eye - squinting worried -->
+  <ellipse cx="72" cy="48" rx="7" ry="3.5" fill="#fff" stroke="#2a1f17" stroke-width="2"/>
+  <!-- Pupils - narrowed, intense -->
+  <ellipse cx="48" cy="48" rx="3" ry="1.5" fill="#2a1f17"/>
+  <ellipse cx="72" cy="48" rx="3" ry="1.5" fill="#2a1f17"/>
+  <!-- Eye sparkles - smaller, stressed -->
+  <circle cx="46" cy="47" r="0.8" fill="#fff"/>
+  <circle cx="70" cy="47" r="0.8" fill="#fff"/>
+
+  <!-- Angry brows - slanted inward -->
+  <g stroke="#2a1f17" stroke-width="3" stroke-linecap="round" fill="none">
+    <path d="M38 30 L54 36"/>
+    <path d="M66 36 L82 30"/>
+  </g>
+
+  <!-- Mouth - worried frown with teeth grit -->
+  <path d="M50 64 Q60 60 70 64" fill="none" stroke="#2a1f17" stroke-width="3" stroke-linecap="round"/>
+  <!-- Small teeth lines -->
+  <path d="M55 62 L55 64" stroke="#2a1f17" stroke-width="1.5"/>
+  <path d="M60 61 L60 64" stroke="#2a1f17" stroke-width="1.5"/>
+  <path d="M65 62 L65 64" stroke="#2a1f17" stroke-width="1.5"/>
+
+  <!-- Subtle nucleus - tense -->
+  <circle cx="60" cy="54" r="11" fill="#5c3f28" opacity="0.5"/>
+
+  <!-- Sweat drops / worry lines -->
+  <g stroke="#2a1f17" stroke-width="1.5" stroke-linecap="round" opacity="0.6">
+    <path d="M35 28 Q33 24 34 20"/>
+    <path d="M85 28 Q87 24 86 20"/>
+  </g>
+</svg>

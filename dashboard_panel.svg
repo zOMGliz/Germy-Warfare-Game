@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 600" width="160" height="600">
+  <!-- Dark background -->
+  <rect x="0" y="0" width="160" height="600" fill="#0a0a12"/>
+
+  <!-- Subtle vertical scanlines -->
+  <defs>
+    <pattern id="scanlines" width="2" height="4" patternUnits="userSpaceOnUse">
+      <rect width="2" height="2" fill="#ffffff" opacity="0.03"/>
+    </pattern>
+  </defs>
+  <rect x="0" y="0" width="160" height="600" fill="url(#scanlines)"/>
+
+  <!-- Outer metal frame -->
+  <rect x="8" y="8" width="144" height="584" fill="none" stroke="#334" stroke-width="6" rx="8"/>
+  <!-- Inner highlight frame -->
+  <rect x="14" y="14" width="132" height="572" fill="none" stroke="#556" stroke-width="2" rx="6"/>
+
+  <!-- Top accent bar -->
+  <rect x="14" y="14" width="132" height="6" fill="#667" rx="2"/>
+  <!-- Bottom accent bar -->
+  <rect x="14" y="580" width="132" height="6" fill="#334" rx="2"/>
+
+  <!-- Subtle corner rivets -->
+  <circle cx="22" cy="22" r="4" fill="#445"/>
+  <circle cx="138" cy="22" r="4" fill="#445"/>
+  <circle cx="22" cy="578" r="4" fill="#445"/>
+  <circle cx="138" cy="578" r="4" fill="#445"/>
+
+  <!-- Inner panel area (where content will sit) -->
+  <rect x="22" y="28" width="116" height="544" fill="#111a" rx="4"/>
+
+  <!-- Decorative horizontal dividers (subtle) -->
+  <line x1="22" y1="140" x2="138" y2="140" stroke="#334" stroke-width="1"/>
+  <line x1="22" y1="260" x2="138" y2="260" stroke="#334" stroke-width="1"/>
+  <line x1="22" y1="380" x2="138" y2="380" stroke="#334" stroke-width="1"/>
+  <line x1="22" y1="500" x2="138" y2="500" stroke="#334" stroke-width="1"/>
+</svg>

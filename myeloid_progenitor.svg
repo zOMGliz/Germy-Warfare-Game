@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <!-- Shadow -->
+  <ellipse cx="60" cy="102" rx="32" ry="8" fill="#000000" opacity="0.25"/>
+
+  <!-- Main body (big myeloid progenitor - factory blob) -->
+  <g>
+    <!-- Core body -->
+    <circle cx="60" cy="54" r="36" fill="#8b5e3c" stroke="#5c3f28" stroke-width="4"/>
+
+    <!-- Body highlight -->
+    <circle cx="48" cy="40" r="14" fill="#b57d5a" opacity="0.5"/>
+
+    <!-- Pulsing texture bumps -->
+    <g fill="#6d4a2e" opacity="0.7">
+      <circle cx="44" cy="32" r="4">
+        <animate attributeName="r" values="4;4.5;4" dur="2.4s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="72" cy="38" r="3.5">
+        <animate attributeName="r" values="3.5;4;3.5" dur="1.9s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="38" cy="62" r="4.5">
+        <animate attributeName="r" values="4.5;5;4.5" dur="2.1s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="78" cy="68" r="3">
+        <animate attributeName="r" values="3;3.5;3" dur="2.7s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+
+    <!-- 6 Bud spots (where monocytes spawn / armor layers) -->
+    <!-- These darken when a monocyte dies in-game -->
+    <g fill="#e8b76a" stroke="#c98a3a" stroke-width="1.5">
+      <!-- Top -->
+      <circle cx="60" cy="24" r="5">
+        <animate attributeName="fill" values="#e8b76a;#ffe08c;#e8b76a" dur="1.8s" repeatCount="indefinite"/>
+      </circle>
+      <!-- Top-right -->
+      <circle cx="82" cy="38" r="4.5">
+        <animate attributeName="fill" values="#e8b76a;#ffe08c;#e8b76a" dur="2.2s" repeatCount="indefinite"/>
+      </circle>
+      <!-- Right -->
+      <circle cx="88" cy="60" r="5">
+        <animate attributeName="fill" values="#e8b76a;#ffe08c;#e8b76a" dur="1.6s" repeatCount="indefinite"/>
+      </circle>
+      <!-- Bottom -->
+      <circle cx="60" cy="84" r="4.5">
+        <animate attributeName="fill" values="#e8b76a;#ffe08c;#e8b76a" dur="2.0s" repeatCount="indefinite"/>
+      </circle>
+      <!-- Bottom-left -->
+      <circle cx="38" cy="72" r="5">
+        <animate attributeName="fill" values="#e8b76a;#ffe08c;#e8b76a" dur="2.5s" repeatCount="indefinite"/>
+      </circle>
+      <!-- Left -->
+      <circle cx="32" cy="46" r="4.5">
+        <animate attributeName="fill" values="#e8b76a;#ffe08c;#e8b76a" dur="1.7s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+  </g>
+
+  <!-- Eyes (wise, tired factory boss) -->
+  <!-- Left eye -->
+  <ellipse cx="48" cy="48" rx="7" ry="5" fill="#fff" stroke="#2a1f17" stroke-width="2"/>
+  <!-- Right eye -->
+  <ellipse cx="72" cy="48" rx="7" ry="5" fill="#fff" stroke="#2a1f17" stroke-width="2"/>
+  <!-- Pupils -->
+  <circle cx="48" cy="48" r="3" fill="#2a1f17"/>
+  <circle cx="72" cy="48" r="3" fill="#2a1f17"/>
+  <!-- Eye sparkles -->
+  <circle cx="46" cy="46" r="1" fill="#fff"/>
+  <circle cx="70" cy="46" r="1" fill="#fff"/>
+
+  <!-- Furrowed brows (wise, stern) -->
+  <g stroke="#2a1f17" stroke-width="2.5" stroke-linecap="round" fill="none">
+    <path d="M40 38 Q48 34 56 39"/>
+    <path d="M64 39 Q72 34 80 38"/>
+  </g>
+
+  <!-- Mouth (slight frown / focused) -->
+  <path d="M52 62 Q60 66 68 62" fill="none" stroke="#2a1f17" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Subtle nucleus inside -->
+  <circle cx="60" cy="54" r="11" fill="#5c3f28" opacity="0.4"/>
+</svg>

@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <!-- Shadow -->
+  <ellipse cx="60" cy="100" rx="32" ry="9" fill="#000000" opacity="0.25"/>
+
+  <!-- Main body (big star-shaped spidery dendritic cell) -->
+  <g>
+    <!-- Core body -->
+    <circle cx="60" cy="56" r="28" fill="#cc5522" stroke="#8a2e12" stroke-width="4"/>
+
+    <!-- Body highlight -->
+    <circle cx="50" cy="45" r="11" fill="#ff8844" opacity="0.5"/>
+
+    <!-- Spidery dendrites (branching arms) - animated wobble -->
+    <!-- Cluster 1: Top arms -->
+    <g stroke="#8a2e12" stroke-width="4" stroke-linecap="round" fill="none">
+      <g>
+        <animateTransform attributeName="transform" type="rotate"
+          from="-4 60 28" to="4 60 28" dur="1.3s" repeatCount="indefinite"/>
+        <path d="M60 28 Q60 12 60 5"/>
+        <path d="M55 20 Q48 8 44 2"/>
+        <path d="M65 20 Q72 8 76 2"/>
+      </g>
+      <!-- Cluster 2: Top-left / Top-right -->
+      <g>
+        <animateTransform attributeName="transform" type="rotate"
+          from="3 40 38" to="-3 40 38" dur="1.7s" repeatCount="indefinite"/>
+        <path d="M40 38 Q26 24 18 18"/>
+      </g>
+      <g>
+        <animateTransform attributeName="transform" type="rotate"
+          from="-3 80 38" to="3 80 38" dur="1.5s" repeatCount="indefinite"/>
+        <path d="M80 38 Q94 24 102 18"/>
+      </g>
+      <!-- Cluster 3: Left / Right -->
+      <g>
+        <animateTransform attributeName="transform" type="rotate"
+          from="-2 32 56" to="2 32 56" dur="2.1s" repeatCount="indefinite"/>
+        <path d="M32 56 Q18 56 10 56"/>
+      </g>
+      <g>
+        <animateTransform attributeName="transform" type="rotate"
+          from="2 88 56" to="-2 88 56" dur="1.8s" repeatCount="indefinite"/>
+        <path d="M88 56 Q102 56 110 56"/>
+      </g>
+      <!-- Cluster 4: Bottom-left / Bottom-right -->
+      <g>
+        <animateTransform attributeName="transform" type="rotate"
+          from="4 40 72" to="-4 40 72" dur="1.4s" repeatCount="indefinite"/>
+        <path d="M40 72 Q26 88 18 96"/>
+      </g>
+      <g>
+        <animateTransform attributeName="transform" type="rotate"
+          from="-4 80 72" to="4 80 72" dur="1.6s" repeatCount="indefinite"/>
+        <path d="M80 72 Q94 88 102 96"/>
+      </g>
+    </g>
+
+    <!-- Thinner secondary branches (animated too) -->
+    <g stroke="#aa3a1a" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.7">
+      <g>
+        <animateTransform attributeName="transform" type="rotate"
+          from="-6 52 15" to="6 52 15" dur="1.2s" repeatCount="indefinite"/>
+        <path d="M52 15 Q48 10 52 6"/>
+        <path d="M68 15 Q72 10 68 6"/>
+      </g>
+      <g>
+        <animateTransform attributeName="transform" type="rotate"
+          from="5 28 44" to="-5 28 44" dur="1.9s" repeatCount="indefinite"/>
+        <path d="M28 44 Q22 38 20 44"/>
+        <path d="M92 44 Q98 38 100 44"/>
+      </g>
+      <g>
+        <animateTransform attributeName="transform" type="rotate"
+          from="-7 48 82" to="7 48 82" dur="1.5s" repeatCount="indefinite"/>
+        <path d="M48 82 Q44 92 50 98"/>
+        <path d="M72 82 Q76 92 70 98"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- Mean face -->
+  <!-- Angry eyebrows -->
+  <g stroke="#1a1a1a" stroke-width="3" stroke-linecap="round">
+    <path d="M44 42 Q50 38 56 43"/>
+    <path d="M64 43 Q70 38 76 42"/>
+  </g>
+
+  <!-- Eyes (narrow, glaring) -->
+  <ellipse cx="50" cy="50" rx="6" ry="4" fill="#fff" stroke="#1a1a1a" stroke-width="1.5"/>
+  <ellipse cx="70" cy="50" rx="6" ry="4" fill="#fff" stroke="#1a1a1a" stroke-width="1.5"/>
+
+  <!-- Pupils (angry, looking down/side) -->
+  <circle cx="51" cy="51" r="2.5" fill="#1a1a1a"/>
+  <circle cx="71" cy="51" r="2.5" fill="#1a1a1a"/>
+
+  <!-- Snarl mouth -->
+  <path d="M48 64 Q60 70 72 64" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Cute lil fangs (hanging below mouth) -->
+  <g fill="#1a1a1a">
+    <polygon points="55,68 57,74 59,68"/>
+    <polygon points="61,68 63,74 65,68"/>
+  </g>
+
+  <!-- Texture bumps on body -->
+  <g fill="#aa3a1a" opacity="0.5">
+    <circle cx="46" cy="48" r="3"/>
+    <circle cx="72" cy="48" r="2.5"/>
+    <circle cx="55" cy="66" r="2"/>
+    <circle cx="66" cy="64" r="2.5"/>
+  </g>
+</svg>

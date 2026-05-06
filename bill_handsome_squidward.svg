@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 240" width="220" height="240">
+  <!-- Shadow -->
+  <ellipse cx="110" cy="205" rx="48" ry="12" fill="#000000" opacity="0.2"/>
+
+  <!-- OVAL BODY (tall, like Handsome Squidward's head) -->
+  <ellipse cx="110" cy="110" rx="40" ry="62" fill="#8e44ad" stroke="#5e2a74" stroke-width="5"/>
+
+  <!-- Body highlight (model sheen) -->
+  <ellipse cx="92" cy="75" rx="18" ry="28" fill="#c39bd3" opacity="0.5"/>
+
+  <!-- GLYCOPROTEIN SPIKES (the Bill touch) -->
+  <g>
+    <animateTransform attributeName="transform" type="rotate"
+      from="0 110 110" to="360 110 110" dur="24s" repeatCount="indefinite"/>
+    <!-- Red spikes around the head/body -->
+    <g fill="#e74c3c" stroke="#c0392b" stroke-width="2.5">
+      <circle cx="110" cy="40" r="11"/>
+      <circle cx="75" cy="52" r="10"/>
+      <circle cx="145" cy="52" r="10"/>
+      <circle cx="58" cy="75" r="9.5"/>
+      <circle cx="162" cy="75" r="9.5"/>
+      <circle cx="52" cy="105" r="10.5"/>
+      <circle cx="168" cy="105" r="10.5"/>
+      <circle cx="58" cy="135" r="9.5"/>
+      <circle cx="162" cy="135" r="9.5"/>
+      <circle cx="75" cy="158" r="10"/>
+      <circle cx="145" cy="158" r="10"/>
+      <circle cx="110" cy="172" r="11"/>
+    </g>
+    <!-- Stems -->
+    <g stroke="#c0392b" stroke-width="3.5" stroke-linecap="round">
+      <line x1="110" y1="58" x2="110" y2="48"/>
+      <line x1="80" y1="66" x2="71" y2="58"/>
+      <line x1="140" y1="66" x2="149" y2="58"/>
+      <line x1="66" y1="82" x2="60" y2="72"/>
+      <line x1="154" y1="82" x2="160" y2="72"/>
+      <line x1="60" y1="105" x2="64" y2="105"/>
+      <line x1="160" y1="105" x2="156" y2="105"/>
+    </g>
+  </g>
+
+  <!-- HANDSOME SQUIDWARD FACE -->
+  <!-- Strong, chiseled jawline (prominent chin, square-ish jaw) -->
+  <path d="M76 88 Q82 140 110 152 Q138 140 144 88" fill="#8e44ad" stroke="#5e2a74" stroke-width="4"/>
+
+  <!-- Cheekbone highlights (broad, rectangular-ish) -->
+  <rect x="70" y="80" width="22" height="32" fill="#c39bd3" opacity="0.6" rx="4"/>
+  <rect x="128" y="80" width="22" height="32" fill="#c39bd3" opacity="0.6" rx="4"/>
+
+  <!-- Forehead highlight -->
+  <ellipse cx="110" cy="72" rx="24" ry="14" fill="#c39bd3" opacity="0.4"/>
+
+  <!-- THE CROWN (gold, kingly!) -->
+  <g>
+    <rect x="72" y="32" width="76" height="11" rx="2" fill="#f1c40f" stroke="#b7950b" stroke-width="3"/>
+    <g fill="#f1c40f" stroke="#b7950b" stroke-width="2">
+      <polygon points="77,32 72,15 83,32"/>
+      <polygon points="93,32 88,10 102,32"/>
+      <polygon points="110,32 105,6 115,32"/>
+      <polygon points="127,32 118,10 132,32"/>
+      <polygon points="143,32 137,15 148,32"/>
+    </g>
+    <circle cx="88" cy="26" r="4" fill="#e74c3c" stroke="#fff" stroke-width="1"/>
+    <circle cx="110" cy="23" r="5" fill="#e74c3c" stroke="#fff" stroke-width="1.5"/>
+    <circle cx="132" cy="26" r="4" fill="#e74c3c" stroke="#fff" stroke-width="1"/>
+    <circle cx="110" cy="21" r="1.5" fill="#fff"/>
+  </g>
+
+  <!-- Handsome Squidward eyebrows (thick, angled, intense) -->
+  <g stroke="#2c3e50" stroke-width="5" stroke-linecap="round">
+    <path d="M80 70 Q95 62 108 68"/>
+    <path d="M112 68 Q125 62 140 70"/>
+  </g>
+
+  <!-- Piercing eyes (Squidward-style, intense) -->
+  <!-- Left eye (almond/angled) -->
+  <ellipse cx="92" cy="88" rx="9" ry="6" fill="#fff" stroke="#2c3e50" stroke-width="2.5"/>
+  <!-- Right eye -->
+  <ellipse cx="128" cy="88" rx="9" ry="6" fill="#fff" stroke="#2c3e50" stroke-width="2.5"/>
+  <!-- Intense pupils -->
+  <ellipse cx="94" cy="87" rx="4" ry="5" fill="#2c3e50"/>
+  <ellipse cx="130" cy="87" rx="4" ry="5" fill="#2c3e50"/>
+  <!-- Eye shines -->
+  <circle cx="95" cy="84" r="2" fill="#fff"/>
+  <circle cx="131" cy="84" r="2" fill="#fff"/>
+  <!-- Subtle under-eye shadow (model contour) -->
+  <ellipse cx="92" cy="96" rx="8" ry="3" fill="#5e2a74" opacity="0.3"/>
+  <ellipse cx="128" cy="96" rx="8" ry="3" fill="#5e2a74" opacity="0.3"/>
+
+  <!-- Longer nose (Handsome Squidward style) -->
+  <path d="M108 82 Q109 100 111 120" fill="none" stroke="#6c3483" stroke-width="4" stroke-linecap="round"/>
+  <!-- Nose tip -->
+  <circle cx="110" cy="122" r="3" fill="#6c3483"/>
+
+  <!-- Perfectly chiseled mouth (smug, confident) -->
+  <path d="M90 118 Q110 130 130 118" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+  <!-- Lip line detail -->
+  <path d="M96 120 Q110 125 124 120" fill="none" stroke="#2c3e50" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Subtle neck (Handsome Squidward has a neck) -->
+  <ellipse cx="110" cy="148" rx="24" ry="8" fill="#7d3c98" opacity="0.8"/>
+
+  <!-- Handsome jawline highlights -->
+  <ellipse cx="84" cy="125" rx="8" ry="5" fill="#c39bd3" opacity="0.5"/>
+  <ellipse cx="136" cy="125" rx="8" ry="5" fill="#c39bd3" opacity="0.5"/>
+
+  <!-- Sparkle on cheekbone (model shine) -->
+  <circle cx="80" cy="95" r="3" fill="#fff" opacity="0.8"/>
+  <circle cx="140" cy="95" r="3" fill="#fff" opacity="0.8"/>
+</svg>

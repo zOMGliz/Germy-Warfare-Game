@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Germy Warfare — Instructions</title>
+<style>
+  body { margin:0; padding:40px; background:#111; color:#fff; font-family:sans-serif; line-height:1.7; }
+  h1 { color:#ffaa00; }
+  h2 { color:#88ff88; margin-top:30px; }
+  h3 { color:#ff88cc; margin-top:25px; }
+  .key { background:#333; padding:2px 8px; border-radius:4px; font-family:monospace; }
+  .back { margin-top:40px; }
+  a { color:#88aaff; }
+  .sprite { vertical-align:middle; margin-right:8px; }
+  .enemy { margin-bottom:18px; }
+  .blurb { font-size:18px; max-width:700px; background:#1a1a1a; padding:20px; border-radius:12px; border:2px solid #ffaa00; }
+</style>
+</head>
+<body>
+<h1><img src="bill.svg" class="sprite" width="40" height="40"> Germy Warfare — How to Play</h1>
+
+<div class="blurb">
+  <p><strong>Meet Bill.</strong> He's a virus with big dreams: total world domination, one fibroblast at a time.</p>
+  <p>Bill's plan is simple: infect every last fibroblast in the body, multiply like crazy, and become unstoppable. The immune system? Just a bunch of overachievers trying to ruin his vibe.</p>
+  <p><em>We believe in Bill. You believe in Bill. Let's make it happen.</em> 💜</p>
+</div>
+
+<h2>The Goal</h2>
+<p>Infect fibroblasts. Survive the immune system. Take over the world.</p>
+<p>Each level lasts 60 seconds. Survive to the end and Bill advances his conquest!</p>
+
+<h2> Controls</h2>
+<ul>
+  <li><span class="key">Mouse</span> — Move Bill (you <em>are</em> the cursor!)</li>
+  <li><span class="key">Space</span> — Shoot a glycoprotein (infects cells or kills enemies)</li>
+  <li><span class="key">Shift</span> / <span class="key">Click</span> — LYSIS: burst all infected fibroblasts at once (score + ammo!)</li>
+</ul>
+
+<h2> The World</h2>
+<p><img src="fibroblast.svg" class="sprite" width="50" height="50">
+<strong>Fibroblasts</strong> are Bill's favorite snack. Float around, minding their own business. Shoot them to infect — they turn bright green and become Bill's loyal minions. When you have a bunch infected, lyse them to pop them all for massive points and ammo!</p>
+<p><img src="dna.svg" class="sprite" width="50" height="50">
+<strong>DNA</strong> drops when infected fibroblasts die. Collect 10 DNA and Bill earns an extra life. Because Bill deserves it.</p>
+
+<h2><img src="bill.svg" class="sprite" width="40" height="40"> The Immune System (Bill's Annoying Fans)</h2>
+<p>These guys think they're the good guys. Let's prove them wrong.</p>
+
+<div class="enemy">
+  <img src="macrophage.svg" class="sprite" width="50" height="50">
+  <strong>Macrophages</strong> — Big red brutes that chase Bill. Touch = lose a life. Shooting one makes it burst into 4 more (because of course it does). They scream "OW!" when it happens.
+</div>
+
+<div class="enemy">
+  <img src="bcell.svg" class="sprite" width="50" height="50">
+  <strong>B Cells</strong> — Patient snipers. They hang back and fire sticky antibodies at Bill. 5 stuck to him = game over (Bill gets very uncomfortable). Touching one directly also gets Bill stuck.
+</div>
+
+<div class="enemy">
+  <img src="eosinophil.svg" class="sprite" width="50" height="50">
+  <strong>Eosinophils</strong> — The "good cop" of the immune system. They try to cure infected fibroblasts (rude!). Touch = lose a life. At least they're slow.
+</div>
+
+<div class="enemy">
+  <img src="neutrophil.svg" class="sprite" width="50" height="50">
+  <strong>Neutrophils</strong> — Lazy workers. They drift around converting fibroblasts into more neutrophils. Touch = lose a life. Boring, but dangerous if ignored.
+</div>
+
+<div class="enemy">
+  <img src="helper_t_cell.svg" class="sprite" width="50" height="50">
+  <strong>Helper T Cells</strong> — Smug teacher's pets. They chase Bill with a self-satisfied attitude. Touch = lose a life. They think they're better than you.
+</div>
+
+<div class="enemy">
+  <img src="cytotoxic_t_cell.svg" class="sprite" width="50" height="50">
+  <strong>Cytotoxic T Cells</strong> — Fast, zig-zagging assassins. Touch = lose a life. Very rude.
+</div>
+
+<div class="enemy">
+  <img src="basophil.svg" class="sprite" width="50" height="50">
+  <strong>Basophils</strong> — Big and slow but they release histamine clouds. Touch = lose a life. Smells bad.
+</div>
+
+<div class="enemy">
+  <img src="dendritic_cell.svg" class="sprite" width="50" height="50">
+  <strong>Dendritic Cells</strong> — Patient trappers. They drift slowly and place cytokine mines near Bill. Touch one = lose a life. They can't be killed — just get angry when shot.
+</div>
+
+<div class="enemy">
+  <img src="nk2.svg" class="sprite" width="50" height="50">
+  <strong>Natural Killer Ninjas</strong> — Stealthy assassins. Chase Bill and blink away from shots. Teleport dramatically every 10 seconds. Touch = lose a life.
+</div>
+
+<div class="enemy">
+  <img src="myeloid_progenitor.svg" class="sprite" width="50" height="50">
+  <strong>Myeloid Progenitor</strong> — The queen cell. Drifts slowly toward Bill while her monocytes orbit in protective ellipses. Touch either = lose a life. When she dies, they scatter and attack.
+</div>
+
+<div class="enemy">
+  <img src="hsc_mystery.svg" class="sprite" width="50" height="50">
+  <strong>Hematopoietic Stem Cell</strong> — Ancient boss. Spawns waves of immune cells in escalating phases. Touch = lose a life. The source of it all.
+</div>
+
+<h2>Scoring & Lives</h2>
+<ul>
+  <li><strong>Lysing infected cells</strong> = points (more cells = more points)</li>
+  <li><strong>Lysing many at once</strong> = big ammo bonus (exponential!)</li>
+  <li><strong>3 lives</strong> to start (shown as Bill faces). Lose one on touch by most immune cells.</li>
+  <li><strong>10 DNA</strong> = +1 life. Bill's reward for a job well done.</li>
+  <li><strong>Accuracy & grade</strong> shown on level-complete screen.</li>
+</ul>
+
+<h2>Pro Tips (for Bill's Success)</h2>
+<ul>
+  <li>Don't shoot macrophages unless you're ready for 4 more.</li>
+  <li>B Cells respawn after you kill them. They don't forget.</li>
+  <li>LYSIS is your best friend. Infect first, burst later.</li>
+  <li>Collect DNA. Always collect DNA.</li>
+</ul>
+
+<div class="back"><a href="index.html">← Back to Game</a></div>
+</body>
+</html>

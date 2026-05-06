@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Shadow -->
+  <ellipse cx="50" cy="82" rx="22" ry="6" fill="#000000" opacity="0.25"/>
+
+  <!-- Main body (lumpy yellow neutrophil) - irregular shape via multiple overlapping circles -->
+  <g fill="#f4d35e" stroke="#c9a227" stroke-width="3">
+    <!-- Base circle (pulsing subtly) -->
+    <circle cx="50" cy="46" r="26">
+      <animate attributeName="r" values="26;27;26" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+    <!-- Lumps / bumps (pulsing subtly) -->
+    <circle cx="38" cy="32" r="11">
+      <animate attributeName="r" values="11;11.5;11" dur="2.2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="65" cy="35" r="10">
+      <animate attributeName="r" values="10;10.6;10" dur="2.8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="35" cy="58" r="9">
+      <animate attributeName="r" values="9;9.5;9" dur="2.4s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="62" cy="60" r="10">
+      <animate attributeName="r" values="10;10.5;10" dur="2.6s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Body highlight -->
+  <circle cx="42" cy="38" r="10" fill="#fffbeb" opacity="0.5"/>
+
+  <!-- Three purple blobs (granules) inside -->
+  <!-- Top two moved up slightly so eyes stand out more -->
+  <circle cx="43" cy="40" r="7" fill="#8a4cff" stroke="#5f2eb8" stroke-width="2"/>
+  <circle cx="60" cy="46" r="6" fill="#7a3fee" stroke="#5f2eb8" stroke-width="2"/>
+  <!-- Bottom blob (mouth visible below) -->
+  <circle cx="49" cy="64" r="6.5" fill="#9b5dff" stroke="#5f2eb8" stroke-width="2"/>
+
+  <!-- Purple blob highlights -->
+  <circle cx="41" cy="40" r="2.5" fill="#c7a3ff" opacity="0.7"/>
+  <circle cx="58" cy="46" r="2" fill="#c7a3ff" opacity="0.7"/>
+  <!-- Highlight for bottom blob (moved down with blob) -->
+  <circle cx="47" cy="62" r="2.5" fill="#c7a3ff" opacity="0.7"/>
+
+  <!-- Bored eyes (half-lidded, looking straight/down) -->
+  <!-- Left eye (white) -->
+  <ellipse cx="41" cy="42" rx="6" ry="5" fill="#fff" stroke="#333" stroke-width="2"/>
+  <!-- Right eye (white) -->
+  <ellipse cx="59" cy="42" rx="6" ry="5" fill="#fff" stroke="#333" stroke-width="2"/>
+
+  <!-- Pupils (small, bored - looking slightly down) -->
+  <circle cx="41" cy="44" r="3" fill="#222"/>
+  <circle cx="59" cy="44" r="3" fill="#222"/>
+
+  <!-- Tiny eye shine (minimal, bored) -->
+  <circle cx="40" cy="41" r="1" fill="#fff" opacity="0.6"/>
+  <circle cx="58" cy="41" r="1" fill="#fff" opacity="0.6"/>
+
+  <!-- Bored mouth (flat line, slightly droopy) -->
+  <path d="M43 53 Q50 51 57 53" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Little blush (subtle, tired) -->
+  <circle cx="32" cy="48" r="3.5" fill="#ff6699" opacity="0.2"/>
+  <circle cx="68" cy="48" r="3.5" fill="#ff6699" opacity="0.2"/>
+</svg>

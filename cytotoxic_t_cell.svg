@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="60" height="60">
+  <!-- Shadow -->
+  <ellipse cx="30" cy="50" rx="14" ry="4" fill="#000000" opacity="0.25"/>
+
+  <!-- Main body (small orange cytotoxic T cell) -->
+  <circle cx="30" cy="28" r="16" fill="#ff8800" stroke="#cc5500" stroke-width="2.5"/>
+
+  <!-- Body highlight -->
+  <circle cx="25" cy="23" r="6" fill="#ffbb66" opacity="0.5"/>
+
+  <!-- Nucleus (focused, determined) -->
+  <circle cx="30" cy="28" r="7" fill="#441100" stroke="#220800" stroke-width="1.5"/>
+  <circle cx="28" cy="26" r="2.5" fill="#662200"/>
+
+  <!-- Determined eyes (focused, staring, small) -->
+  <!-- Left eye -->
+  <ellipse cx="24" cy="25" rx="4" ry="3.5" fill="#fff" stroke="#111" stroke-width="1.5"/>
+  <!-- Right eye -->
+  <ellipse cx="36" cy="25" rx="4" ry="3.5" fill="#fff" stroke="#111" stroke-width="1.5"/>
+
+  <!-- Pupils (intense, focused forward) -->
+  <circle cx="24" cy="25" r="2" fill="#111"/>
+  <circle cx="36" cy="25" r="2" fill="#111"/>
+
+  <!-- Eye sparkles (sharp, determined) -->
+  <circle cx="23" cy="24" r="1" fill="#fff"/>
+  <circle cx="35" cy="24" r="1" fill="#fff"/>
+
+  <!-- Determined eyebrows (furrowed, intense) -->
+  <path d="M19 20 Q23 17 27 21" fill="none" stroke="#111" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M33 21 Q37 17 41 20" fill="none" stroke="#111" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Small mouth (tight, determined) -->
+  <path d="M26 33 Q30 35 34 33" fill="none" stroke="#111" stroke-width="1.5" stroke-linecap="round"/>
+</svg>

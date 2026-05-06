@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-45 -45 155 155" width="96" height="96">
+  <!-- Shadow -->
+  <ellipse cx="32" cy="52" rx="13" ry="4" fill="#000000" opacity="0.25"/>
+
+  <!-- Yellow outline (visible against dark bg) -->
+  <circle cx="32" cy="28" r="19" fill="none" stroke="#ffdd33" stroke-width="2"/>
+
+  <!-- 4 throwing-star spikes (yellow, opposite directions) EXTRA BIG -->
+  <!-- Up -->
+  <polygon points="32,-43 22,17 42,17" fill="#ffdd33" stroke="#cc9900" stroke-width="2"/>
+  <!-- Down -->
+  <polygon points="32,99 22,39 42,39" fill="#ffdd33" stroke="#cc9900" stroke-width="2"/>
+  <!-- Left -->
+  <polygon points="-39,28 21,19 21,37" fill="#ffdd33" stroke="#cc9900" stroke-width="2"/>
+  <!-- Right -->
+  <polygon points="103,28 43,19 43,37" fill="#ffdd33" stroke="#cc9900" stroke-width="2"/>
+
+  <!-- Main body (dark ninja robe, deep purple-black) -->
+  <circle cx="32" cy="28" r="16" fill="#2a1f3d" stroke="#110a1a" stroke-width="3"/>
+
+  <!-- Hood highlight (subtle sheen) -->
+  <circle cx="28" cy="23" r="6" fill="#443355" opacity="0.5"/>
+
+  <!-- Ninja hood (covers head, leaves eyes) -->
+  <ellipse cx="32" cy="25" rx="15" ry="12" fill="#1a1428" stroke="#0d0a17" stroke-width="2"/>
+
+  <!-- Mask (mouth cover, classic ninja) -->
+  <rect x="24" y="27" width="16" height="8" rx="2" fill="#0d0a17" stroke="#110a1a" stroke-width="1.5"/>
+
+  <!-- Ninja eyes (intense, sharp, round) -->
+  <!-- Left eye -->
+  <circle cx="26" cy="23" r="4" fill="#fff" stroke="#111" stroke-width="1.5"/>
+  <!-- Right eye -->
+  <circle cx="38" cy="23" r="4" fill="#fff" stroke="#111" stroke-width="1.5"/>
+
+  <!-- Pupils (fierce, focused) -->
+  <circle cx="26" cy="23" r="2.2" fill="#000"/>
+  <circle cx="38" cy="23" r="2.2" fill="#000"/>
+
+  <!-- Eye sparkles (deadly glint) -->
+  <circle cx="25" cy="22" r="1" fill="#fff"/>
+  <circle cx="37" cy="22" r="1" fill="#fff"/>
+
+  <!-- Furrowed ninja eyebrows (intense, angled, gold) -->
+  <path d="M20 18 Q25 15 29 18" fill="none" stroke="#ffdd33" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M35 18 Q39 15 44 18" fill="none" stroke="#ffdd33" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Center shuriken detail on chest -->
+  <g fill="#ffdd33" stroke="#cc9900" stroke-width="1">
+    <polygon points="32,32 30,35 32,38 34,35" fill="#ffdd33"/>
+  </g>
+  <circle cx="32" cy="35" r="1.5" fill="#1a1428"/>
+
+  <!-- Shoulder pads (ninja armor) -->
+  <ellipse cx="22" cy="26" rx="4" ry="5" fill="#443355" stroke="#221a33" stroke-width="1"/>
+  <ellipse cx="42" cy="26" rx="4" ry="5" fill="#443355" stroke="#221a33" stroke-width="1"/>
+</svg>

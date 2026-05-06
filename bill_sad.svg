@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Shadow -->
+  <ellipse cx="100" cy="170" rx="45" ry="12" fill="#000000" opacity="0.2"/>
+
+  <!-- Main body (purple capsid) -->
+  <circle cx="100" cy="95" r="48" fill="#9b59b6" stroke="#6c3483" stroke-width="4"/>
+
+  <!-- Highlight on body -->
+  <circle cx="82" cy="72" r="18" fill="#c39bd3" opacity="0.6"/>
+
+  <!-- Rotating glycoprotein ring (slow random-ish orbit) -->
+  <g>
+    <animateTransform attributeName="transform" type="rotate"
+      from="0 100 95" to="360 100 95" dur="26s" repeatCount="indefinite"/>
+    <!-- Red glycoproteins (spikes sticking OUT) -->
+    <g fill="#e74c3c" stroke="#c0392b" stroke-width="2">
+      <circle cx="100" cy="36" r="10"/>
+      <circle cx="80" cy="42" r="9"/>
+      <circle cx="120" cy="42" r="9"/>
+      <circle cx="60" cy="58" r="9"/>
+      <circle cx="140" cy="58" r="9"/>
+      <circle cx="48" cy="95" r="10"/>
+      <circle cx="152" cy="95" r="10"/>
+      <circle cx="60" cy="132" r="9"/>
+      <circle cx="140" cy="132" r="9"/>
+      <circle cx="80" cy="148" r="9"/>
+      <circle cx="120" cy="148" r="9"/>
+    </g>
+    <!-- Tiny stems -->
+    <g stroke="#c0392b" stroke-width="3" stroke-linecap="round">
+      <line x1="100" y1="55" x2="100" y2="48"/>
+      <line x1="82" y1="62" x2="77" y2="55"/>
+      <line x1="118" y1="62" x2="123" y2="55"/>
+      <line x1="67" y1="75" x2="60" y2="67"/>
+      <line x1="133" y1="75" x2="140" y2="67"/>
+      <line x1="57" y1="95" x2="60" y2="95"/>
+      <line x1="143" y1="95" x2="140" y2="95"/>
+      <line x1="67" y1="115" x2="60" y2="123"/>
+      <line x1="133" y1="115" x2="140" y2="123"/>
+      <line x1="82" y1="128" x2="77" y2="135"/>
+      <line x1="118" y1="128" x2="123" y2="135"/>
+    </g>
+  </g>
+
+  <!-- Sad face -->
+  <!-- Eyes (droopy, white) -->
+  <ellipse cx="82" cy="90" rx="5" ry="4" fill="#fff"/>
+  <ellipse cx="118" cy="90" rx="5" ry="4" fill="#fff"/>
+  <!-- Eyebrows (slanted sad) -->
+  <path d="M72 78 Q82 82 92 78" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M108 78 Q118 82 128 78" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Frown mouth -->
+  <path d="M85 118 Q100 108 115 118" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+  <!-- Tears -->
+  <circle cx="76" cy="98" r="2.5" fill="#5dade2" opacity="0.7"/>
+  <circle cx="124" cy="98" r="2.5" fill="#5dade2" opacity="0.7"/>
+</svg>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 70" width="50" height="70">
+  <!-- Stuck antibody: slightly tilted, sticky blob attached -->
+  <!-- Sticky blob (adhered to Bill) -->
+  <ellipse cx="25" cy="62" rx="14" ry="7" fill="#ffcc44" opacity="0.5"/>
+  <!-- Antibody Y rotated a bit (tilted stuck) -->
+  <g transform="rotate(-12 25 32)">
+    <!-- Stem -->
+    <rect x="21" y="28" width="7" height="28" rx="2" fill="#ffcc44" stroke="#bb9911" stroke-width="1"/>
+    <!-- Arms -->
+    <rect x="14" y="18" width="7" height="20" rx="2" fill="#ffcc44" stroke="#bb9911" stroke-width="1" transform="rotate(-35 17 28)"/>
+    <rect x="27" y="18" width="7" height="20" rx="2" fill="#ffcc44" stroke="#bb9911" stroke-width="1" transform="rotate(35 30 28)"/>
+    <!-- Binding tips -->
+    <circle cx="10" cy="13" r="4.5" fill="#ffee99" stroke="#bb9911" stroke-width="1"/>
+    <circle cx="39" cy="13" r="4.5" fill="#ffee99" stroke="#bb9911" stroke-width="1"/>
+  </g>
+  <!-- Tiny particles (sticky) -->
+  <circle cx="16" cy="58" r="2" fill="#ffdd66" opacity="0.6"/>
+  <circle cx="33" cy="55" r="1.5" fill="#ffdd66" opacity="0.6"/>
+</svg>

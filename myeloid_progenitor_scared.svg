@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <!-- Shadow -->
+  <ellipse cx="60" cy="102" rx="32" ry="8" fill="#000000" opacity="0.25"/>
+
+  <!-- Scared aura (light tan, jittery) -->
+  <g>
+    <!-- Outer pulsing aura ring - more erratic -->
+    <circle cx="60" cy="54" r="44" fill="none" stroke="#d2b48c" stroke-width="6" opacity="0.35">
+      <animate attributeName="r" values="41;47;41" dur="0.8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.2;0.4;0.2" dur="0.8s" repeatCount="indefinite"/>
+    </circle>
+    <!-- Radiating energy lines - shaky -->
+    <g stroke="#d2b48c" stroke-width="2" stroke-linecap="round" opacity="0.3">
+      <g>
+        <animate attributeName="opacity" values="0.2;0.45;0.2" dur="0.6s" repeatCount="indefinite"/>
+        <path d="M60 14 L60 8"/>
+        <path d="M60 100 L60 106"/>
+        <path d="M20 54 L14 54"/>
+        <path d="M106 54 L112 54"/>
+      </g>
+      <g>
+        <animate attributeName="opacity" values="0.25;0.5;0.25" dur="0.9s" repeatCount="indefinite"/>
+        <path d="M35 24 L30 18"/>
+        <path d="M85 24 L90 18"/>
+        <path d="M35 84 L30 90"/>
+        <path d="M85 84 L90 90"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- Main body (scared progenitor - very damaged) -->
+  <g>
+    <!-- Core body - paler stressed brown -->
+    <circle cx="60" cy="54" r="36" fill="#a66a4a" stroke="#5c3f28" stroke-width="4"/>
+
+    <!-- Body highlight - washed out -->
+    <circle cx="48" cy="40" r="14" fill="#c98c6a" opacity="0.35"/>
+
+    <!-- Stress cracks - even more -->
+    <g stroke="#3d281b" stroke-width="2.5" stroke-linecap="round" opacity="0.8">
+      <path d="M38 32 Q45 26 52 31"/>
+      <path d="M68 29 Q74 34 80 28"/>
+      <path d="M34 58 Q39 65 45 60"/>
+      <path d="M74 62 Q80 68 86 60"/>
+      <path d="M42 22 Q48 18 55 23"/>
+      <path d="M65 75 Q72 78 78 73"/>
+      <path d="M50 18 Q55 14 62 19"/>
+      <path d="M44 80 Q52 84 60 79"/>
+      <path d="M27 50 Q32 46 37 52"/>
+      <path d="M83 50 Q88 46 93 52"/>
+    </g>
+
+    <!-- Pulsing texture bumps - fast erratic -->
+    <g fill="#6b4830" opacity="0.7">
+      <circle cx="44" cy="32" r="4">
+        <animate attributeName="r" values="4;4.9;4" dur="0.7s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="72" cy="38" r="3.5">
+        <animate attributeName="r" values="3.5;4.3;3.5" dur="0.6s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="38" cy="62" r="4.5">
+        <animate attributeName="r" values="4.5;5.4;4.5" dur="0.8s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="78" cy="68" r="3">
+        <animate attributeName="r" values="3;3.9;3" dur="0.65s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+
+    <!-- 6 Bud spots - mostly cracked (only 1-2 left) -->
+    <g stroke="#c98a3a" stroke-width="1.5">
+      <!-- Top - cracked/dark -->
+      <circle cx="60" cy="24" r="5" fill="#5c3f28"/>
+      <!-- Top-right - cracked/dark -->
+      <circle cx="82" cy="38" r="4.5" fill="#5c3f28"/>
+      <!-- Right - cracked/dark -->
+      <circle cx="88" cy="60" r="5" fill="#5c3f28"/>
+      <!-- Bottom - cracked/dark -->
+      <circle cx="60" cy="84" r="4.5" fill="#5c3f28"/>
+      <!-- Bottom-left - cracked/dark -->
+      <circle cx="38" cy="72" r="5" fill="#5c3f28"/>
+      <!-- Left - last survivor, panicked pulse -->
+      <circle cx="32" cy="46" r="4.5" fill="#e8b76a" stroke="#c98a3a">
+        <animate attributeName="fill" values="#e8b76a;#ffe08c;#e8b76a" dur="0.5s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+  </g>
+
+  <!-- Eyes - wide scared -->
+  <!-- Left eye - big round, wide -->
+  <ellipse cx="48" cy="48" rx="7" ry="6" fill="#fff" stroke="#2a1f17" stroke-width="2"/>
+  <!-- Right eye - big round, wide -->
+  <ellipse cx="72" cy="48" rx="7" ry="6" fill="#fff" stroke="#2a1f17" stroke-width="2"/>
+  <!-- Pupils - small, darting up (fear) -->
+  <circle cx="48" cy="45" r="2.5" fill="#2a1f17"/>
+  <circle cx="72" cy="45" r="2.5" fill="#2a1f17"/>
+  <!-- Eye sparkles - tiny -->
+  <circle cx="47" cy="44" r="0.7" fill="#fff"/>
+  <circle cx="71" cy="44" r="0.7" fill="#fff"/>
+
+  <!-- Scared brows - raised and curved (fear arc) -->
+  <g stroke="#2a1f17" stroke-width="3" stroke-linecap="round" fill="none">
+    <path d="M39 34 Q48 30 55 35"/>
+    <path d="M65 35 Q72 30 81 34"/>
+  </g>
+
+  <!-- Mouth - open scared O -->
+  <ellipse cx="60" cy="63" rx="5" ry="3.5" fill="none" stroke="#2a1f17" stroke-width="2.5"/>
+  <!-- Inner mouth dark -->
+  <ellipse cx="60" cy="63" rx="2.5" ry="1.5" fill="#2a1f17"/>
+
+  <!-- Subtle nucleus - tense -->
+  <circle cx="60" cy="54" r="11" fill="#5c3f28" opacity="0.5"/>
+
+  <!-- More sweat drops / panic lines -->
+  <g stroke="#2a1f17" stroke-width="1.5" stroke-linecap="round" opacity="0.75">
+    <path d="M35 28 Q33 24 34 20"/>
+    <path d="M85 28 Q87 24 86 20"/>
+    <path d="M32 40 Q30 36 31 32"/>
+    <path d="M88 40 Q90 36 89 32"/>
+  </g>
+</svg>

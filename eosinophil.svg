@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Shadow -->
+  <ellipse cx="50" cy="82" rx="22" ry="6" fill="#000000" opacity="0.25"/>
+
+  <!-- Main body (pink eosinophil) -->
+  <circle cx="50" cy="46" r="26" fill="#ff99cc" stroke="#d75a9a" stroke-width="3"/>
+
+  <!-- Body highlight -->
+  <circle cx="42" cy="38" r="10" fill="#ffccdd" opacity="0.6"/>
+
+  <!-- Two big purple blobs (granules) -->
+  <circle cx="38" cy="52" r="10" fill="#7b3fff" stroke="#5a2fc7" stroke-width="2"/>
+  <circle cx="62" cy="38" r="11" fill="#9a5cff" stroke="#5a2fc7" stroke-width="2"/>
+
+  <!-- Purple blob highlights -->
+  <circle cx="35" cy="49" r="3.5" fill="#c5a3ff" opacity="0.7"/>
+  <circle cx="59" cy="35" r="4" fill="#c5a3ff" opacity="0.7"/>
+
+  <!-- Kawaii eyes -->
+  <!-- Left eye (big round) -->
+  <ellipse cx="41" cy="42" rx="7" ry="8" fill="#fff" stroke="#333" stroke-width="2"/>
+  <!-- Right eye (big round) -->
+  <ellipse cx="59" cy="42" rx="7" ry="8" fill="#fff" stroke="#333" stroke-width="2"/>
+
+  <!-- Pupils (big, cute, looking slightly up-right) -->
+  <circle cx="43" cy="40" r="4" fill="#333"/>
+  <circle cx="61" cy="40" r="4" fill="#333"/>
+
+  <!-- Eye sparkles -->
+  <circle cx="41" cy="38" r="2" fill="#fff"/>
+  <circle cx="59" cy="38" r="2" fill="#fff"/>
+  <circle cx="44" cy="41" r="0.8" fill="#fff"/>
+  <circle cx="62" cy="41" r="0.8" fill="#fff"/>
+
+  <!-- Tiny happy mouth -->
+  <path d="M44 52 Q50 56 56 52" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Little blush circles -->
+  <circle cx="32" cy="48" r="4" fill="#ff6699" opacity="0.35"/>
+  <circle cx="68" cy="48" r="4" fill="#ff6699" opacity="0.35"/>
+</svg>

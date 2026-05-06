@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Shadow -->
+  <ellipse cx="50" cy="82" rx="22" ry="6" fill="#000000" opacity="0.25"/>
+
+  <!-- Main body (compact red macrophage) -->
+  <circle cx="50" cy="46" r="24" fill="#cc3333" stroke="#991f1f" stroke-width="3"/>
+
+  <!-- Body highlight -->
+  <circle cx="42" cy="38" r="9" fill="#ff6666" opacity="0.5"/>
+
+  <!-- Bumps / texture on body -->
+  <g fill="#aa2222" opacity="0.6">
+    <circle cx="38" cy="32" r="3"/>
+    <circle cx="60" cy="35" r="2.5"/>
+    <circle cx="35" cy="52" r="3"/>
+    <circle cx="62" cy="54" r="2"/>
+    <circle cx="44" cy="60" r="2.5"/>
+  </g>
+
+  <!-- Eyebrows (separate, angled, shifty) -->
+  <g stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round">
+    <!-- Left eyebrow -->
+    <g>
+      <path d="M36 33 Q42 30 48 33" fill="none"/>
+      <animateTransform attributeName="transform" type="rotate"
+        from="-3 42 31" to="3 42 31" dur="1.5s" repeatCount="indefinite"/>
+    </g>
+    <!-- Right eyebrow -->
+    <g>
+      <path d="M52 33 Q58 30 64 33" fill="none"/>
+      <animateTransform attributeName="transform" type="rotate"
+        from="3 58 31" to="-3 58 31" dur="1.7s" repeatCount="indefinite"/>
+    </g>
+  </g>
+
+  <!-- Eyes (squinted) -->
+  <!-- Left eye -->
+  <ellipse cx="42" cy="42" rx="6" ry="4" fill="#fff" stroke="#1a1a1a" stroke-width="1"/>
+  <!-- Right eye -->
+  <ellipse cx="58" cy="42" rx="6" ry="4" fill="#fff" stroke="#1a1a1a" stroke-width="1"/>
+
+  <!-- Pupils (shifty left-right, in sync) -->
+  <g>
+    <!-- Left pupil -->
+    <circle cx="42" cy="42" r="2.5" fill="#111">
+      <animate attributeName="cx" values="40;44;40" dur="3.2s" repeatCount="indefinite"/>
+    </circle>
+    <!-- Right pupil (moves same direction as left) -->
+    <circle cx="58" cy="42" r="2.5" fill="#111">
+      <animate attributeName="cx" values="56;60;56" dur="3.2s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Small eye shine -->
+  <circle cx="41" cy="41" r="1" fill="#fff" opacity="0.8"/>
+  <circle cx="57" cy="41" r="1" fill="#fff" opacity="0.8"/>
+</svg>

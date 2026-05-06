@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Shadow -->
+  <ellipse cx="100" cy="170" rx="45" ry="12" fill="#000000" opacity="0.2"/>
+
+  <!-- Main body (purple capsid) -->
+  <circle cx="100" cy="95" r="48" fill="#9b59b6" stroke="#6c3483" stroke-width="4"/>
+
+  <!-- Highlight on body -->
+  <circle cx="82" cy="72" r="18" fill="#c39bd3" opacity="0.6"/>
+
+  <!-- Rotating glycoprotein ring (slow random-ish orbit) -->
+  <g>
+    <animateTransform attributeName="transform" type="rotate"
+      from="0 100 95" to="360 100 95" dur="26s" repeatCount="indefinite"/>
+    <!-- Dark red wilted glycoproteins -->
+    <g fill="#6b1f1f" stroke="#3a1111" stroke-width="2">
+      <circle cx="100" cy="36" r="9"/>
+      <circle cx="80" cy="42" r="8"/>
+      <circle cx="120" cy="42" r="8"/>
+      <circle cx="60" cy="58" r="8"/>
+      <circle cx="140" cy="58" r="8"/>
+      <circle cx="48" cy="95" r="9"/>
+      <circle cx="152" cy="95" r="9"/>
+      <circle cx="60" cy="132" r="8"/>
+      <circle cx="140" cy="132" r="8"/>
+      <circle cx="80" cy="148" r="8"/>
+      <circle cx="120" cy="148" r="8"/>
+    </g>
+    <!-- Wilted droopy stems (curved down) -->
+    <g stroke="#3a1111" stroke-width="3" stroke-linecap="round" fill="none">
+      <path d="M100 55 Q100 52 100 48"/>
+      <path d="M82 62 Q79 58 77 55"/>
+      <path d="M118 62 Q121 58 123 55"/>
+      <path d="M67 75 Q64 71 60 67"/>
+      <path d="M133 75 Q136 71 140 67"/>
+      <path d="M57 95 Q59 95 60 95"/>
+      <path d="M143 95 Q141 95 140 95"/>
+      <path d="M67 115 Q64 119 60 123"/>
+      <path d="M133 115 Q136 119 140 123"/>
+      <path d="M82 128 Q79 132 77 135"/>
+      <path d="M118 128 Q121 132 123 135"/>
+    </g>
+  </g>
+
+  <!-- Sad face -->
+  <!-- Left eye with black eye bruise -->
+  <ellipse cx="82" cy="90" rx="5" ry="4" fill="#fff"/>
+  <!-- Black eye bruise (dark purple/black) -->
+  <ellipse cx="82" cy="90" rx="11" ry="9" fill="#2c1b3a" opacity="0.7"/>
+  <ellipse cx="82" cy="90" rx="6" ry="5" fill="#1a1124"/>
+  <!-- Right eye (normal sad) -->
+  <ellipse cx="118" cy="90" rx="5" ry="4" fill="#fff"/>
+  <!-- Eyebrows (slanted sad) -->
+  <path d="M72 78 Q82 82 92 78" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M108 78 Q118 82 128 78" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Frown mouth -->
+  <path d="M85 118 Q100 108 115 118" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+  <!-- Tears -->
+  <circle cx="76" cy="98" r="2.5" fill="#5dade2" opacity="0.7"/>
+  <circle cx="124" cy="98" r="2.5" fill="#5dade2" opacity="0.7"/>
+</svg>

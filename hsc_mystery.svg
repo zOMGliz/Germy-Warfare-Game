@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <!-- Cloud gradient -->
+    <linearGradient id="cloudGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#553366" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="#331144" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#220033" stop-opacity="0.7"/>
+    </linearGradient>
+    <!-- Glow for question mark -->
+    <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <!-- Soft shadow -->
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3"/>
+    </filter>
+  </defs>
+
+  <!-- Background dark void -->
+  <rect width="200" height="200" fill="#110022"/>
+
+  <!-- Mysterious cloud (multiple layered blobs) -->
+  <g opacity="0.95">
+    <!-- Base cloud layer -->
+    <ellipse cx="100" cy="125" rx="68" ry="38" fill="url(#cloudGrad)"/>
+    <ellipse cx="70" cy="110" rx="32" ry="28" fill="#442255" opacity="0.8"/>
+    <ellipse cx="130" cy="118" rx="38" ry="26" fill="#331144" opacity="0.8"/>
+    <!-- Puffy top -->
+    <ellipse cx="85" cy="95" rx="26" ry="22" fill="#553366" opacity="0.9"/>
+    <ellipse cx="112" cy="92" rx="30" ry="20" fill="#442255" opacity="0.85"/>
+    <!-- Side wisps -->
+    <ellipse cx="55" cy="130" rx="20" ry="16" fill="#331144" opacity="0.7"/>
+    <ellipse cx="145" cy="128" rx="22" ry="15" fill="#442255" opacity="0.7"/>
+  </g>
+
+  <!-- Swirling mist particles (faint) -->
+  <g opacity="0.4">
+    <circle cx="68" cy="105" r="4" fill="#8866aa"/>
+    <circle cx="135" cy="108" r="3" fill="#8866aa"/>
+    <circle cx="82" cy="135" r="2.5" fill="#aa88cc"/>
+    <circle cx="118" cy="138" r="3" fill="#8866aa"/>
+    <circle cx="95" cy="145" r="2" fill="#aa88cc"/>
+  </g>
+
+  <!-- Big glowing question mark -->
+  <g filter="url(#glow)">
+    <!-- Shadow under mark -->
+    <text x="103" y="92" font-family="Georgia, serif" font-size="92" font-weight="bold" fill="#000000" opacity="0.4" text-anchor="middle">?</text>
+    <!-- Main question mark -->
+    <text x="100" y="90" font-family="Georgia, serif" font-size="92" font-weight="bold" fill="#ddddff" text-anchor="middle">?</text>
+    <!-- Subtle inner highlight -->
+    <text x="97" y="86" font-family="Georgia, serif" font-size="92" font-weight="bold" fill="#ffffff" opacity="0.35" text-anchor="middle">?</text>
+  </g>
+
+  <!-- Tiny sparkle dots around the mark -->
+  <g fill="#ffffff" opacity="0.7">
+    <circle cx="72" cy="58" r="1.5"/>
+    <circle cx="128" cy="55" r="1"/>
+    <circle cx="65" cy="72" r="1"/>
+    <circle cx="135" cy="68" r="1.2"/>
+  </g>
+</svg>

@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Shadow -->
+  <ellipse cx="100" cy="170" rx="45" ry="12" fill="#000000" opacity="0.2"/>
+
+  <!-- Main body (purple capsid, slightly darker — stressed) -->
+  <circle cx="100" cy="95" r="48" fill="#7d3c98" stroke="#5a2d6e" stroke-width="4"/>
+
+  <!-- Highlight on body -->
+  <circle cx="82" cy="72" r="18" fill="#a569bd" opacity="0.6"/>
+
+  <!-- Red glycoproteins (spikes sticking OUT) -->
+  <g fill="#e74c3c" stroke="#c0392b" stroke-width="2">
+    <circle cx="100" cy="36" r="10"/>
+    <circle cx="80" cy="42" r="9"/>
+    <circle cx="120" cy="42" r="9"/>
+    <circle cx="60" cy="58" r="9"/>
+    <circle cx="140" cy="58" r="9"/>
+    <circle cx="48" cy="95" r="10"/>
+    <circle cx="152" cy="95" r="10"/>
+    <circle cx="60" cy="132" r="9"/>
+    <circle cx="140" cy="132" r="9"/>
+    <circle cx="80" cy="148" r="9"/>
+    <circle cx="120" cy="148" r="9"/>
+  </g>
+
+  <!-- Tiny stems connecting spikes to body -->
+  <g stroke="#c0392b" stroke-width="3" stroke-linecap="round">
+    <line x1="100" y1="55" x2="100" y2="48"/>
+    <line x1="82" y1="62" x2="77" y2="55"/>
+    <line x1="118" y1="62" x2="123" y2="55"/>
+    <line x1="67" y1="75" x2="60" y2="67"/>
+    <line x1="133" y1="75" x2="140" y2="67"/>
+    <line x1="57" y1="95" x2="60" y2="95"/>
+    <line x1="143" y1="95" x2="140" y2="95"/>
+    <line x1="67" y1="115" x2="60" y2="123"/>
+    <line x1="133" y1="115" x2="140" y2="123"/>
+    <line x1="82" y1="128" x2="77" y2="135"/>
+    <line x1="118" y1="128" x2="123" y2="135"/>
+  </g>
+
+  <!-- Simple face: squinted eyes + frown -->
+  <!-- Eyes (squinted, worried) -->
+  <ellipse cx="82" cy="88" rx="5" ry="3" fill="#fff"/>
+  <ellipse cx="118" cy="88" rx="5" ry="3" fill="#fff"/>
+  <!-- Frown mouth -->
+  <path d="M85 118 Q100 108 115 118" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- === ANTIBODIES STUCK TO BILL (5 of them = GAME OVER) === -->
+
+  <!-- 1. Top left stuck (prongs toward Bill) -->
+  <g transform="translate(68, 58) rotate(150)">
+    <rect x="-4" y="0" width="8" height="22" rx="2" fill="#ffcc44" stroke="#bb9911" stroke-width="1"/>
+    <rect x="-8" y="-8" width="8" height="16" rx="2" fill="#ffcc44" stroke="#bb9911" stroke-width="1" transform="rotate(-35 -4 0)"/>
+    <rect x="0" y="-8" width="8" height="16" rx="2" fill="#ffcc44" stroke="#bb9911" stroke-width="1" transform="rotate(35 4 0)"/>
+    <circle cx="-4" cy="-13" r="4" fill="#ffee88" stroke="#bb9911" stroke-width="1"/>
+    <circle cx="5" cy="-13" r="4" fill="#ffee88" stroke="#bb9911" stroke-width="1"/>
+    <ellipse cx="0" cy="20" rx="9" ry="5" fill="#ffcc44" opacity="0.4"/>
+  </g>
+
+  <!-- 2. Top right stuck (prongs toward Bill) -->
+  <g transform="translate(132, 64) rotate(205)">
+    <rect x="-4" y="0" width="8" height="22" rx="2" fill="#ffcc44" stroke="#bb9911" stroke-width="1"/>
+    <rect x="-8" y="-8" width="8" height="16" rx="2" fill="#ffcc44" stroke="#bb9911" stroke-width="1" transform="rotate(-35 -4 0)"/>
+    <rect x="0" y="-8" width="8" height="16" rx="2" fill="#ffcc44" stroke="#bb9911" stroke-width="1" transform="rotate(35 4 0)"/>
+    <circle cx="-4" cy="-13" r="4" fill="#ffee88" stroke="#bb9911" stroke-width="1"/>
+    <circle cx="5" cy="-13" r="4" fill="#ffee88" stroke="#bb9911" stroke-width="1"/>
+    <ellipse cx="0" cy="20" rx="9" ry="5" fill="#ffcc44" opacity="0.4"/>
+  </g>
+
+  <!-- 3. Left side stuck (prongs toward Bill) -->
+  <g transform="translate(65, 108) rotate(125)">
+    <rect x="-4" y="0" width="8" height="22" rx="2" fill="#ffcc44" stroke="#bb9911" stroke-width="1"/>
+    <rect x="-8" y="-8" width="8" height="16" rx="2" fill="#ffcc44" stroke="#bb9911" stroke-width="1" transform="rotate(-35 -4 0)"/>
+    <rect x="0" y="-8" width="8" height="16" rx="2" fill="#ffcc44" stroke="#bb9911" stroke-width="1" transform="rotate(35 4 0)"/>
+    <circle cx="-4" cy="-13" r="4" fill="#ffee88" stroke="#bb9911" stroke-width="1"/>
+    <circle cx="5" cy="-13" r="4" fill="#ffee88" stroke="#bb9911" stroke-width="1"/>
+    <ellipse cx="0" cy="20" rx="9" ry="5" fill="#ffcc44" opacity="0.4"/>
+  </g>
+
+  <!-- 4. Right side stuck (prongs toward Bill) -->
+  <g transform="translate(135, 102) rotate(240)">
+    <rect x="-4" y="0" width="8" height="22" rx="2" fill="#ffcc44" stroke="#bb9911" stroke-width="1"/>
+    <rect x="-8" y="-8" width="8" height="16" rx="2" fill="#ffcc44" stroke="#bb9911" stroke-width="1" transform="rotate(-35 -4 0)"/>
+    <rect x="0" y="-8" width="8" height="16" rx="2" fill="#ffcc44" stroke="#bb9911" stroke-width="1" transform="rotate(35 4 0)"/>
+    <circle cx="-4" cy="-13" r="4" fill="#ffee88" stroke="#bb9911" stroke-width="1"/>
+    <circle cx="5" cy="-13" r="4" fill="#ffee88" stroke="#bb9911" stroke-width="1"/>
+    <ellipse cx="0" cy="20" rx="9" ry="5" fill="#ffcc44" opacity="0.4"/>
+  </g>
+
+  <!-- 5. Top of head stuck (prongs toward Bill, the 5th = doom!) -->
+  <g transform="translate(100, 50) rotate(5)">
+    <rect x="-4" y="0" width="8" height="22" rx="2" fill="#ffcc44" stroke="#bb9911" stroke-width="1"/>
+    <rect x="-8" y="-8" width="8" height="16" rx="2" fill="#ffcc44" stroke="#bb9911" stroke-width="1" transform="rotate(-35 -4 0)"/>
+    <rect x="0" y="-8" width="8" height="16" rx="2" fill="#ffcc44" stroke="#bb9911" stroke-width="1" transform="rotate(35 4 0)"/>
+    <circle cx="-4" cy="-13" r="4" fill="#ffee88" stroke="#bb9911" stroke-width="1"/>
+    <circle cx="5" cy="-13" r="4" fill="#ffee88" stroke="#bb9911" stroke-width="1"/>
+    <ellipse cx="0" cy="20" rx="9" ry="5" fill="#ffcc44" opacity="0.4"/>
+  </g>
+</svg>

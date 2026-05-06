@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Shadow -->
+  <ellipse cx="100" cy="170" rx="40" ry="12" fill="#000000" opacity="0.2"/>
+
+  <!-- DNA Double Helix -->
+  <!-- Glow background -->
+  <g opacity="0.3">
+    <path d="M70 40 Q100 70 70 100 Q100 130 70 160" fill="none" stroke="#00ffff" stroke-width="18" stroke-linecap="round"/>
+    <path d="M130 40 Q100 70 130 100 Q100 130 130 160" fill="none" stroke="#00ffff" stroke-width="18" stroke-linecap="round"/>
+  </g>
+
+  <!-- Left strand (backbone) -->
+  <path d="M70 40 Q100 70 70 100 Q100 130 70 160" fill="none" stroke="#3b82f6" stroke-width="10" stroke-linecap="round"/>
+  <!-- Right strand (backbone) -->
+  <path d="M130 40 Q100 70 130 100 Q100 130 130 160" fill="none" stroke="#06b6d4" stroke-width="10" stroke-linecap="round"/>
+
+  <!-- Base pairs (horizontal connectors) -->
+  <g stroke="#e0f2fe" stroke-width="6" stroke-linecap="round">
+    <!-- Top section -->
+    <line x1="72" y1="52" x2="128" y2="52"/>
+    <line x1="75" y1="65" x2="125" y2="65"/>
+    <!-- Middle -->
+    <line x1="72" y1="80" x2="128" y2="80"/>
+    <line x1="75" y1="95" x2="125" y2="95"/>
+    <line x1="72" y1="110" x2="128" y2="110"/>
+    <!-- Lower -->
+    <line x1="75" y1="125" x2="125" y2="125"/>
+    <line x1="72" y1="138" x2="128" y2="138"/>
+    <line x1="75" y1="152" x2="125" y2="152"/>
+  </g>
+
+  <!-- Highlight accents on strands -->
+  <path d="M72 42 Q100 68 72 98" fill="none" stroke="#93c5fd" stroke-width="4" stroke-linecap="round" opacity="0.6"/>
+  <path d="M128 42 Q100 68 128 98" fill="none" stroke="#67e8f9" stroke-width="4" stroke-linecap="round" opacity="0.6"/>
+
+  <!-- Little nucleotide dots on base pairs -->
+  <g fill="#bae6fd">
+    <circle cx="74" cy="52" r="3"/>
+    <circle cx="126" cy="52" r="3"/>
+    <circle cx="77" cy="65" r="3"/>
+    <circle cx="123" cy="65" r="3"/>
+    <circle cx="74" cy="80" r="3"/>
+    <circle cx="126" cy="80" r="3"/>
+    <circle cx="77" cy="95" r="3"/>
+    <circle cx="123" cy="95" r="3"/>
+    <circle cx="74" cy="110" r="3"/>
+    <circle cx="126" cy="110" r="3"/>
+    <circle cx="77" cy="125" r="3"/>
+    <circle cx="123" cy="125" r="3"/>
+    <circle cx="74" cy="138" r="3"/>
+    <circle cx="126" cy="138" r="3"/>
+    <circle cx="77" cy="152" r="3"/>
+    <circle cx="123" cy="152" r="3"/>
+  </g>
+
+  <!-- Subtle sparkle highlights -->
+  <circle cx="82" cy="60" r="2" fill="#ffffff" opacity="0.8"/>
+  <circle cx="118" cy="75" r="2" fill="#ffffff" opacity="0.8"/>
+  <circle cx="82" cy="115" r="2" fill="#ffffff" opacity="0.8"/>
+  <circle cx="118" cy="145" r="2" fill="#ffffff" opacity="0.8"/>
+</svg>

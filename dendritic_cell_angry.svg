@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140" width="140" height="140">
+  <!-- Shadow -->
+  <ellipse cx="70" cy="118" rx="38" ry="10" fill="#000000" opacity="0.3"/>
+
+  <!-- Angry red glow (outer aura) -->
+  <circle cx="70" cy="62" r="48" fill="#ff3300" opacity="0.15"/>
+  <circle cx="70" cy="62" r="42" fill="#ff0000" opacity="0.1"/>
+
+  <!-- Main body (deep angry red) -->
+  <g>
+    <!-- Core body -->
+    <circle cx="70" cy="62" r="32" fill="#991100" stroke="#660000" stroke-width="5"/>
+
+    <!-- Body highlight (faint) -->
+    <circle cx="58" cy="50" r="12" fill="#cc3300" opacity="0.4"/>
+
+    <!-- Dark scowl shadow on body -->
+    <ellipse cx="70" cy="74" rx="22" ry="10" fill="#550000" opacity="0.6"/>
+
+    <!-- SPIDERY DENDRITES - aggressive, jagged, thick -->
+    <g stroke="#440000" stroke-width="5" stroke-linecap="round" fill="none">
+      <!-- Top cluster -->
+      <g>
+        <animateTransform attributeName="transform" type="rotate" from="-6 70 35" to="6 70 35" dur="0.9s" repeatCount="indefinite"/>
+        <path d="M70 30 Q70 12 70 2"/>
+        <path d="M64 28 Q56 10 50 0"/>
+        <path d="M76 28 Q84 10 90 0"/>
+      </g>
+      <!-- Top-left / Top-right -->
+      <g>
+        <animateTransform attributeName="transform" type="rotate" from="5 48 48" to="-5 48 48" dur="1.1s" repeatCount="indefinite"/>
+        <path d="M48 42 Q30 28 16 18"/>
+      </g>
+      <g>
+        <animateTransform attributeName="transform" type="rotate" from="-5 92 48" to="5 92 48" dur="1.0s" repeatCount="indefinite"/>
+        <path d="M92 42 Q110 28 124 18"/>
+      </g>
+      <!-- Left / Right -->
+      <g>
+        <animateTransform attributeName="transform" type="rotate" from="-4 40 62" to="4 40 62" dur="1.3s" repeatCount="indefinite"/>
+        <path d="M38 62 Q20 62 8 62"/>
+      </g>
+      <g>
+        <animateTransform attributeName="transform" type="rotate" from="4 100 62" to="-4 100 62" dur="1.2s" repeatCount="indefinite"/>
+        <path d="M102 62 Q120 62 132 62"/>
+      </g>
+      <!-- Bottom-left / Bottom-right -->
+      <g>
+        <animateTransform attributeName="transform" type="rotate" from="6 50 78" to="-6 50 78" dur="0.8s" repeatCount="indefinite"/>
+        <path d="M50 78 Q32 92 18 108"/>
+      </g>
+      <g>
+        <animateTransform attributeName="transform" type="rotate" from="-6 90 78" to="6 90 78" dur="1.1s" repeatCount="indefinite"/>
+        <path d="M90 78 Q108 92 122 108"/>
+      </g>
+    </g>
+
+    <!-- Secondary thin angry branches -->
+    <g stroke="#660000" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.6">
+      <g>
+        <animateTransform attributeName="transform" type="rotate" from="-9 65 25" to="9 65 25" dur="0.7s" repeatCount="indefinite"/>
+        <path d="M62 22 Q56 8 60 2"/>
+        <path d="M78 22 Q84 8 80 2"/>
+      </g>
+      <g>
+        <animateTransform attributeName="transform" type="rotate" from="8 42 55" to="-8 42 55" dur="1.4s" repeatCount="indefinite"/>
+        <path d="M35 48 Q22 40 18 48"/>
+        <path d="M105 48 Q118 40 122 48"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- ANGRY FACE -->
+  <!-- Deep red angry brows (slanted inward) -->
+  <g stroke="#330000" stroke-width="4.5" stroke-linecap="round">
+    <!-- Left brow (angry slant) -->
+    <path d="M48 44 Q55 38 62 46"/>
+    <!-- Right brow (angry slant) -->
+    <path d="M78 46 Q85 38 92 44"/>
+  </g>
+
+  <!-- Eyes - NARROW, GLOWING RED ANGRY -->
+  <!-- Left eye -->
+  <ellipse cx="58" cy="54" rx="7" ry="4" fill="#330000" stroke="#000000" stroke-width="2"/>
+  <!-- Right eye -->
+  <ellipse cx="82" cy="54" rx="7" ry="4" fill="#330000" stroke="#000000" stroke-width="2"/>
+  <!-- Angry red pupils (small, intense) -->
+  <circle cx="59" cy="54" r="3" fill="#ff0000"/>
+  <circle cx="83" cy="54" r="3" fill="#ff0000"/>
+  <!-- Eye shine (tiny) -->
+  <circle cx="58" cy="53" r="1" fill="#ffffff" opacity="0.6"/>
+  <circle cx="82" cy="53" r="1" fill="#ffffff" opacity="0.6"/>
+
+  <!-- FURIOUS SNARL -->
+  <path d="M52 72 Q70 82 88 72" fill="none" stroke="#220000" stroke-width="3.5" stroke-linecap="round"/>
+
+  <!-- BIG ANGRY FANGS (pointing DOWN, prominent) -->
+  <g fill="#220000">
+    <!-- Left fang -->
+    <polygon points="57,71 60,86 63,71"/>
+    <!-- Right fang -->
+    <polygon points="77,71 80,86 83,71"/>
+    <!-- Extra center tooth for extra mean -->
+    <polygon points="67,73 70,82 73,73"/>
+  </g>
+
+  <!-- Red anger vein marks on face -->
+  <g stroke="#ff3333" stroke-width="1.5" stroke-linecap="round" opacity="0.7">
+    <path d="M52 50 Q55 47 58 51"/>
+    <path d="M82 51 Q85 47 88 50"/>
+  </g>
+
+  <!-- Texture bumps (angry red) -->
+  <g fill="#550000" opacity="0.7">
+    <circle cx="55" cy="52" r="3.5"/>
+    <circle cx="86" cy="52" r="3"/>
+    <circle cx="64" cy="70" r="2.5"/>
+    <circle cx="76" cy="69" r="3"/>
+  </g>
+</svg>

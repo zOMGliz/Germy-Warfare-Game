@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80">
+  <!-- Shadow -->
+  <ellipse cx="40" cy="68" rx="18" ry="5" fill="#000000" opacity="0.25"/>
+
+  <!-- Main body (small round monocyte) -->
+  <g>
+    <!-- Core body -->
+    <circle cx="40" cy="38" r="22" fill="#a8b4c8" stroke="#6a7280" stroke-width="3"/>
+
+    <!-- Body highlight -->
+    <circle cx="32" cy="30" r="8" fill="#d4dbe8" opacity="0.6"/>
+
+    <!-- Subtle texture bumps -->
+    <g fill="#7e8a9c" opacity="0.5">
+      <circle cx="30" cy="26" r="2.5"/>
+      <circle cx="48" cy="28" r="2"/>
+      <circle cx="34" cy="48" r="2.5"/>
+    </g>
+
+    <!-- Big nucleus (classic monocyte look) -->
+    <circle cx="40" cy="38" r="11" fill="#4a5566" stroke="#2f3744" stroke-width="2"/>
+
+    <!-- Nucleus highlight -->
+    <circle cx="36" cy="34" r="4" fill="#6a7a8a" opacity="0.7"/>
+  </g>
+
+  <!-- Tiny eyes (peek out over nucleus) -->
+  <!-- Left eye -->
+  <circle cx="34" cy="32" r="2.5" fill="#fff" stroke="#2f3744" stroke-width="1"/>
+  <!-- Right eye -->
+  <circle cx="46" cy="32" r="2.5" fill="#fff" stroke="#2f3744" stroke-width="1"/>
+  <!-- Pupils -->
+  <circle cx="34" cy="32" r="1" fill="#2f3744"/>
+  <circle cx="46" cy="32" r="1" fill="#2f3744"/>
+  <!-- Eye sparkles -->
+  <circle cx="33.5" cy="31.5" r="0.5" fill="#fff"/>
+  <circle cx="45.5" cy="31.5" r="0.5" fill="#fff"/>
+
+  <!-- Slight smile (friendly-ish minion) -->
+  <path d="M34 48 Q40 52 46 48" fill="none" stroke="#2f3744" stroke-width="1.5" stroke-linecap="round"/>
+</svg>
