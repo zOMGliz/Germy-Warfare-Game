@@ -3357,7 +3357,7 @@ function cutsceneLoop() {
     }
   } else if (cutscenePhase === 'reveal') {
     cutsceneRevealAlpha = Math.min(1, cutsceneRevealAlpha + 0.015);
-    cutsceneRevealScale = Math.min(1, cutsceneRevealScale + 0.008);
+    cutsceneRevealScale = Math.min(0.85, cutsceneRevealScale + 0.008);
     if (cutsceneRevealAlpha > 0.35 && cutsceneLabel.textContent === '') {
       cutsceneLabel.textContent = 'BILL ACHIEVES HIS DREAMS';
     }
